@@ -268,6 +268,6 @@ module.exports = Calendrier.prototype;
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 
-console.log(Calendrier.prototype.premierCoursDeLaJournee('2018-04-01'));
+console.log(Calendrier.prototype.premierCoursDeLaJournee('2018-04-02'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
