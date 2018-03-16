@@ -114,8 +114,22 @@ Cours.prototype.getHeureLongue = function(date) {
     return chaine;
 };
 
-Cours.prototype.getDateLongue = function (date) {
+Cours.prototype.getDateLongue = function(date) {
     return this.getJourLong(date)+' à '+this.getHeureLongue(date);
+};
+
+Cours.prototype.dureeDuCours = function(){
+    var heure = (this.dateFin-this.dateDebut)/(1000*60*60);
+    var min = (this.dateFin-this.dateDebut)%(1000*60*60);
+    if(heure == 0){
+        return min+" minutes";
+    }else{
+        if(min == 0){
+            return heure+"h";
+        }else{
+            return heure+"h"+min;
+        }
+    }
 };
 
 /**
@@ -182,11 +196,11 @@ Calendrier.prototype = {
                     aprem = true;
                     retour += "l'après-midi, ";
                 }
-                retour += 'à '+cour.getHeureLongue(cour.dateDebut)+', un '+cour.nom
+                retour += 'à '+cour.getHeureLongue(cour.dateDebut)+', '+cour.nom
                 if(cour.salle != ''){
                     retour += ' en salle '+cour.salle.replaceAll('_',' ');
                 }
-                retour += "\r\n";
+                retour += ".\r\n";
             });
         }
         console.log(retour);
