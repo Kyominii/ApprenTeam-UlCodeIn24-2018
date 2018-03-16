@@ -185,7 +185,7 @@ Calendrier.prototype = {
                 if(cour.salle != ''){
                     retour += ' en salle '+cour.salle.replaceAll('_',' ');
                 }
-                retour += "\n";
+                retour += "\r\n";
             });
         }
         console.log(retour);
