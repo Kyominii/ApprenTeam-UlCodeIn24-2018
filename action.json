@@ -7,7 +7,7 @@
         "conversationName": "askADE"
       },
       "intent": {
-        "name": "actions.intent.ADE-UL",
+        "name": "actions.intent.MAIN",
         "trigger": {
           "queryPatterns": [
             "Demande à ADE"
