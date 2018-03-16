@@ -2,32 +2,27 @@
 
 var ressources = 173137; // TODO apprenteam <3
 var nbWeeks = 1;
-var timestamp = 1521421200;
-/*
-// Read Synchrously
-var fs_group = require("fs");
-console.log("\n *START* \n");
-var content = fs_group.readFileSync("groupes.json");
-console.log("Output Content : \n"+ content);
-console.log("\n *EXIT* \n");*/
 
-
-function getCalendrier(idGroupe,nbWeeks,timestamp) {
+function getCalendrier(idGroupe,nbWeeks,dateParam) {
+    var timestamp = createDate(getDateParam(dateParam),true).getTime()/1000;
+    nbWeeks = Math.floor((timestamp-new Date()/1000)/(60*60*24*7))+1+nbWeeks;
     var calendrier;
     var request = require('sync-request');
     var body;
     var endLine;
     try {
-        var result = request('GET', 'https://adeical.univ-lorraine.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=' + idGroupe + '&projectId=5&nbWeeks=' + nbWeeks + '&firstWeek=' + timestamp);
+        var result = request('GET', 'https://adeical.univ-lorraine.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=' + idGroupe + '&projectId=5&nbWeeks=' + nbWeeks);
 
         if(result.statusCode == 200){
             body = result.body.toString('utf-8');
             endLine = '\r\n';
         }else{
+            console.log("Erreur : "+result.statusCode);
             body = getFromTextIfAdeFail();
             endLine = '\n';
         }
     }catch (e){
+        console.log(e);
         body = getFromTextIfAdeFail();
         endLine = '\n';
     }finally {
@@ -149,7 +144,7 @@ function dateEgales (dateA,dateB,strict) {
 Calendrier.prototype = {
     cours : [],
     getCoursDuJour : function (dateParam) {
-        this.cours = getCalendrier(ressources,nbWeeks,timestamp).cours;
+        this.cours = getCalendrier(ressources,nbWeeks,dateParam).cours;
         var calendrier = this;
         var res = [];
         var recherche = getDateParam(dateParam);
@@ -161,7 +156,7 @@ Calendrier.prototype = {
         return res;
     },
     getCoursHeure : function (dateParam,heureParam) {
-        this.cours = getCalendrier(ressources,nbWeeks,timestamp).cours;
+        this.cours = getCalendrier(ressources,nbWeeks,dateParam).cours;
         var res = [];
         var recherche = getDateParam(dateParam,heureParam);
         this.cours.forEach(function(cours){
@@ -248,6 +243,6 @@ module.exports = Calendrier.prototype;
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 
-Calendrier.prototype.afficherCoursJour('2018-03-16');
+Calendrier.prototype.afficherCoursJour('2018-05-24');
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
