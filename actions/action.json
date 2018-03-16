@@ -19,7 +19,7 @@
   "conversations": {
     "askADE": {
       "name": "askADE",
-      "url": "https://01a7dc1f.ngrok.io/"
+      "url": "https://01a7dc1f.ngrok.io/service"
     }
   },
   "locale": "fr"
