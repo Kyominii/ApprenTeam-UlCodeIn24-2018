@@ -35,12 +35,155 @@ function getFromTextIfAdeFail(){
     return contents;
 }
 
+function getZerosInit(text,nbChiffres){
+    while((""+text).length < nbChiffres){
+        text = '0'+text;
+    }
+    return text;
+}
+
 function Calendrier(calendrier){
     this.cours = calendrier;
+    this.cours.sort(function (a,b){
+        return a.dateDebut-b.dateDebut;
+    });
+}
+
+var TEXTE_JOUR = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+var TEXTE_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','decembre'];
+
+/**
+ * Retourne un Object Date en fonction du texte en paramètre
+ * @param dateTexte date à convertir (format : YYYYMMDDTHHMMSSZ) (T et Z sont des chars ISO)
+ * @param heureLocale vrai si c'est l'heure locale, faux si c'est GTM+0
+ * @returns {Date}
+ */
+function createDate(dateTexte,heureLocale){
+    var locale = '';
+    if(heureLocale){
+        var x = new Date();
+        locale = ""+(-x.getTimezoneOffset()*10/6);
+        while(locale.length < 4){locale = '0'+locale;}
+        locale = '+'+locale;
+    }else{
+        locale = '+0000';
+    }
+    return new Date(dateTexte.substr(0,4)+'-'+dateTexte.substr(4,2)+'-'+dateTexte.substr(6,5)+':'+dateTexte.substr(11,2)+':'+dateTexte.substr(13,2)+locale);
+}
+
+function getDateTexte(jour,mois,annee,heure,minute){
+    jour = getZerosInit(jour,2);
+    mois = getZerosInit(mois,2);
+    if(heure && minute) {
+        heure = getZerosInit(heure, 2);
+        minute = getZerosInit(minutes, 2);
+    }else{
+        heure='00';
+        minute='00';
+    }
+    return ""+annee+mois+jour+'T'+heure+minute+'00Z';
+}
+
+function Cours(nom,salle,dateFin,dateDebut,description){
+    this.nom = nom;
+    this.salle = salle;
+    this.dateDebut = createDate(dateDebut);
+    this.dateFin = createDate(dateFin);
+    this.description = description;
+}
+
+Cours.prototype.getJourLong = function(date) {
+    var chaine = TEXTE_JOUR[date.getDay()]+' '+date.getDate()+' '+TEXTE_MOIS[date.getMonth()];
+    return chaine;
+};
+
+Cours.prototype.getHeureLongue = function(date) {
+    var chaine = date.getHours()+' heures';
+    if(date.getMinutes() != 0){
+        chaine += ' '+date.getMinutes();
+    }
+    return chaine;
+};
+
+Cours.prototype.getDateLongue = function (date) {
+    return this.getJourLong(date)+' à '+this.getHeureLongue(date);
+};
+
+/**
+ * Retourne vrai si les deux dates sont le même jour
+ * @param dateA date
+ * @param dateB date
+ * @param strict vrai : vérifie l'heure / faux : vérifie que le jour
+ * @returns vrai si ce sont les mêmes dates
+ */
+function dateEgales (dateA,dateB,strict) {
+    if(dateA.getFullYear() == dateB.getFullYear() && dateA.getMonth() == dateB.getMonth() && dateA.getDay() == dateB.getDay()) {
+        return !(strict && dateA.getHours() != dateB.getHours());
+    }
+    return false;
 }
 
 Calendrier.prototype = {
-    cours : []
+    cours : [],
+    getCoursDuJour : function (jour,mois,annee) {
+        var calendrier = this;
+        jour = getZerosInit(jour,2);
+        mois = getZerosInit(mois,2);
+        var res = [];
+        var recherche = getDateTexte(jour,mois,annee);
+        this.cours.forEach(function(cours){
+            if(dateEgales(cours.dateDebut,createDate(recherche,true))){
+                res.push(cours);
+            }
+        });
+        return res;
+    },
+    getCoursHeure : function (jour,mois,annee,heure,minutes) {
+        jour = getZerosInit(jour,2);
+        mois = getZerosInit(mois,2);
+        heure = getZerosInit(heure,2);
+        minutes = getZerosInit(minutes,2);
+        var res = [];
+        var recherche = getDateTexte(jour,mois,annee,heure,minutes);
+        this.cours.forEach(function(cours){
+            if(dateEgales(cours.dateDebut,createDate(recherche,true),true)){
+                res.push(cours);
+            }
+        });
+
+        return res;
+    },
+    afficherCoursJour : function(jour,mois,annee){
+        var cours = this.getCoursDuJour(jour,mois,annee);
+        jour = getZerosInit(jour,2);
+        mois = getZerosInit(mois,2);
+        var date = createDate(getDateTexte(jour,mois,annee));
+        var retour = '';
+        if(dateEgales(date,new Date())){
+            retour = "Aujourd'hui, ";
+        }else{
+            retour = "Le ";
+        }
+        retour += TEXTE_JOUR[date.getDay()]+' '+date.getDate()+' '+TEXTE_MOIS[date.getMonth()]+' ';
+        if(cours.length == 0){
+            retour += "vous n'avez pas de cours.";
+        }else {
+            retour += "vous assisterez à :\n";
+            var matin = false, aprem = false;
+            cours.forEach(function (cour) {
+                if(cour.dateDebut.getHours() < 13 && !matin){
+                    matin = true;
+                    retour += "le matin, ";
+                }else if(cour.dateDebut.getHours() >= 13 && !aprem){
+                    aprem = true;
+                    retour += "l'après-midi, ";
+                }
+                retour += 'à '+cour.getHeureLongue(cour.dateDebut)+', un '+cour.nom+' en salle '+cour.salle+'\n';
+            });
+        }
+        console.log(retour);
+        return retour;
+    }
 };
 
 function parseCalendrier(output,endLine){
@@ -48,36 +191,37 @@ function parseCalendrier(output,endLine){
     var cours = output.split('BEGIN:VEVENT'+endLine);
     for(var i=1; i<cours.length; i++){
         var coursBrut = cours[i].split(endLine);
-        calendrier[i] = [];
+        var nom,salle,dateFin,dateDebut,description;
         for(var h=0; h<coursBrut.length; h++){
             var champs = coursBrut[h].split(':');
             if(champs.length >= 2) {
                 switch (champs[0]) {
                     case 'DTSTART':
-                        calendrier[i]['debut'] = champs[1];
+                        dateDebut = champs[1];
                         break;
                     case 'DTEND':
-                        calendrier[i]['fin'] = champs[1];
+                        dateFin = champs[1];
                         break;
                     case 'SUMMARY':
-                        calendrier[i]['nom'] = champs[1];
+                        nom = champs[1];
                         break;
                     case 'LOCATION':
-                        calendrier[i]['salle'] = champs[1];
+                        salle = champs[1];
                         break;
                     case 'DESCRIPTION':
-                        calendrier[i]['description'] = champs[1];
+                        description = champs[1];
                         break;
                 }
             }
         }
+        calendrier[i] = new Cours(nom,salle,dateFin,dateDebut,description);
     }
     return new Calendrier(calendrier);
 }
 
 var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
-for(var i=0;i<calendar.cours.length;i++){
-    console.log("COURS : ");
-    console.log(calendar.cours[i]);
-}
+var cours = calendar.getCoursDuJour(22,3,2018);
+calendar.afficherCoursJour(22,3,2018);
+//console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
+//console.log(calendar.getCoursHeure(23,3,2018,16,0));
