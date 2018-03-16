@@ -213,9 +213,8 @@ function parseCalendrier(output,endLine){
     return new Calendrier(calendrier);
 }
 
-module.exports = {
-  'Calendrier' : Calendrier.prototype
-};
+module.exports = Calendrier.prototype;
+
 /*
 var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
