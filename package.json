@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/Kyominii/ApprenTeam-UlCodeIn24-2018/issues"
   },
-  "homepage": "https://github.com/Kyominii/ApprenTeam-UlCodeIn24-2018#readme"
+  "homepage": "https://github.com/Kyominii/ApprenTeam-UlCodeIn24-2018#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
 }

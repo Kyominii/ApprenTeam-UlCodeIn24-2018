@@ -1,24 +1,24 @@
 {
   "actions": [
     {
-      "description": "Test hello world",
-      "name": "MAIN",
+      "description": "Action principale d'ADE UL",
+      "name": "ADE-UL",
       "fulfillment": {
-        "conversationName": "hello world"
+        "conversationName": "askADE"
       },
       "intent": {
-        "name": "actions.intent.MAIN",
+        "name": "actions.intent.ADE-UL",
         "trigger": {
           "queryPatterns": [
-            "parler à ApprenTeam"
+            "Demande à ADE"
           ]
         }
       }
     }
   ],
   "conversations": {
-    "hello world": {
-      "name": "hello world",
+    "askADE": {
+      "name": "askADE",
       "url": "https://01a7dc1f.ngrok.io/"
     }
   },
