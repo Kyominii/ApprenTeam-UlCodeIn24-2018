@@ -187,8 +187,6 @@ Calendrier.prototype = {
         return res;
     },
     getCoursHeure : function (dateParam,heureParam) {
-        var timestamp = createDate(getDateParam(dateParam),true).getTime()/1000;
-        nbWeeks = Math.floor((timestamp-new Date()/1000)/(60*60*24*7))+1+nbWeeks;
         this.cours = getCalendrier(ressources,1,dateParam).cours;
         var res = [];
         var recherche = getDateParam(dateParam,heureParam);
@@ -224,7 +222,10 @@ Calendrier.prototype = {
         return retour;
 
     },
-    nbHeuresCoursDansLaPeriode : function(dateParam){
+    nbHeuresCoursDansLaPeriode : function(dateDebut,dateFin){
+        var timestamp = createDate(getDateParam(dateFin),true).getTime()/1000;
+        var needWeeks = Math.floor((timestamp-new Date()/1000)/(60*60*24*7))+1;
+        console.log(needWeeks);
         var cours = this.getCoursDuJour(dateParam);
         var date = createDate(getDateParam(dateParam));
         var retour = getPhraseDebut(date);
@@ -306,6 +307,6 @@ module.exports = Calendrier.prototype;
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 
-console.log(Calendrier.prototype.dernierCoursDeLaJournee('2018-04-03'));
+console.log(Calendrier.prototype.nbHeuresCoursDansLaPeriode('2018-04-03','2018-04-06'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
