@@ -143,7 +143,7 @@ function dateEgales (dateA,dateB,strict) {
 
 function getPhraseDebut(date){
     var retour = 'Le ';
-    var ojd = new Date('2018-03-31');
+    var ojd = new Date();
     if(date.getFullYear() == ojd.getFullYear()) {
         if (date.getMonth() == ojd.getMonth()) {
             if (date.getDate() == ojd.getDate()) {
@@ -162,8 +162,20 @@ function getPhraseDebut(date){
 
 Calendrier.prototype = {
     cours : [],
+    getCoursPeriode : function (dateDebut,dateFin) {
+        this.cours = getCalendrier(ressources,1,dateParam).cours;
+        var calendrier = this;
+        var res = [];
+        var recherche = getDateParam(dateParam);
+        this.cours.forEach(function(cours){
+            if(dateEgales(cours.dateDebut,createDate(recherche,true))){
+                res.push(cours);
+            }
+        });
+        return res;
+    },
     getCoursDuJour : function (dateParam) {
-        this.cours = getCalendrier(ressources,nbWeeks,dateParam).cours;
+        this.cours = getCalendrier(ressources,1,dateParam).cours;
         var calendrier = this;
         var res = [];
         var recherche = getDateParam(dateParam);
@@ -175,7 +187,9 @@ Calendrier.prototype = {
         return res;
     },
     getCoursHeure : function (dateParam,heureParam) {
-        this.cours = getCalendrier(ressources,nbWeeks,dateParam).cours;
+        var timestamp = createDate(getDateParam(dateParam),true).getTime()/1000;
+        nbWeeks = Math.floor((timestamp-new Date()/1000)/(60*60*24*7))+1+nbWeeks;
+        this.cours = getCalendrier(ressources,1,dateParam).cours;
         var res = [];
         var recherche = getDateParam(dateParam,heureParam);
         this.cours.forEach(function(cours){
@@ -187,6 +201,30 @@ Calendrier.prototype = {
         return res;
     },
     premierCoursDeLaJournee : function(dateParam){
+        var cours = this.getCoursDuJour(dateParam);
+        var date = createDate(getDateParam(dateParam));
+        var retour = getPhraseDebut(date);
+        if(cours.length == 0){
+            retour += "vous n'avez pas de cours.";
+        }else {
+            retour += "vous commencez à "+cours[0].getHeureLongue(cours[0].dateDebut);
+        }
+        return retour;
+
+    },
+    dernierCoursDeLaJournee : function(dateParam){
+        var cours = this.getCoursDuJour(dateParam);
+        var date = createDate(getDateParam(dateParam));
+        var retour = getPhraseDebut(date);
+        if(cours.length == 0){
+            retour += "vous n'avez pas de cours.";
+        }else {
+            retour += "vous terminez à "+cours[cours.length-1].getHeureLongue(cours[cours.length-1].dateFin);
+        }
+        return retour;
+
+    },
+    nbHeuresCoursDansLaPeriode : function(dateParam){
         var cours = this.getCoursDuJour(dateParam);
         var date = createDate(getDateParam(dateParam));
         var retour = getPhraseDebut(date);
@@ -268,6 +306,6 @@ module.exports = Calendrier.prototype;
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 
-console.log(Calendrier.prototype.premierCoursDeLaJournee('2018-04-02'));
+console.log(Calendrier.prototype.dernierCoursDeLaJournee('2018-04-03'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
