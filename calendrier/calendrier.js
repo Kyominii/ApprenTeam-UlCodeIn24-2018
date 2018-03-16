@@ -181,7 +181,11 @@ Calendrier.prototype = {
                     aprem = true;
                     retour += "l'après-midi, ";
                 }
-                retour += 'à '+cour.getHeureLongue(cour.dateDebut)+', un '+cour.nom+' en salle '+cour.salle+"\n<br/>";
+                retour += 'à '+cour.getHeureLongue(cour.dateDebut)+', un '+cour.nom
+                if(cour.salle != ''){
+                    retour += ' en salle '+cour.salle;
+                }
+                retour += "\n";
             });
         }
         console.log(retour);
