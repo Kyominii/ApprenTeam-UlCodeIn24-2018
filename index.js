@@ -1,6 +1,7 @@
 'use strict';
 
 const ConversationV1 = require('watson-developer-cloud/conversation/v1');
+const ADE = require('./calendrier/calendrier');
 const redis = require('redis');
 
 var express = require('express');
@@ -93,10 +94,26 @@ function getSessionContext(sessionId) {
 		}
   }
 
+function callADE(response) {
+	
+	switch(response.output.code) {
+		case "scenario1_journee":
+			console.log('ok');
+			return ADE.afficherCoursJour(response.entities[0].value);
+	}
+
+}
+
 function sendResponse(response, resolve) {
 	
 	  // Combine the output messages into one message.
-	  const output = response.output.text.join(' ');
+	  var output;
+	  if(response.output.code) {
+	  	output = callADE(response);
+	  } else {
+	  	output = response.output.text.join(' ');
+	  }
+	  console.log(response.output.code);
 	  var resp = {
 		conversationToken: null,
 		expectUserResponse: true,
