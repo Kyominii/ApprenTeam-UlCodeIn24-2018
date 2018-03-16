@@ -1,0 +1,38 @@
+{
+  "TELECOM Nancy" : {
+    "première année" : {
+      "Groupe 1" : "115245,116842",
+      "Groupe 2" : "116843,116844",
+      "Groupe 3" : "115245,116889",
+      "Groupe 4" : "117082,117083",
+      "Groupe 5" : "135198,135199",
+      "Apprenti" : "137137"
+    },
+    "deuxième année" : {
+      "Apprenti" : "173138,173139"
+    },
+    "troisième année" : {
+
+    }
+  },
+  "FST":{
+
+  },
+  "IUT Nancy Charlemagne" : {
+    "Département informatique" : {
+      "première année" : {
+        "Groupe A" : "147722",
+        "Groupe B" : "147723",
+        "Groupe C" : "147724",
+        "Groupe D" : "147725",
+        "Groupe E" : "147726"
+      },
+      "deuxième année" : {
+        "Groupe A" : 0,
+        "Groupe B" : 0,
+        "Groupe C" : 0,
+        "Groupe D" : 0
+      }
+    }
+  }
+}
