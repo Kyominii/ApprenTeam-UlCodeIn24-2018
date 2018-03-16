@@ -3,6 +3,13 @@
 var ressources = 173137; // TODO apprenteam <3
 var nbWeeks = 1;
 var timestamp = 1521421200;
+/*
+// Read Synchrously
+var fs_group = require("fs");
+console.log("\n *START* \n");
+var content = fs_group.readFileSync("groupes.json");
+console.log("Output Content : \n"+ content);
+console.log("\n *EXIT* \n");*/
 
 
 function getCalendrier(idGroupe,nbWeeks,timestamp) {
@@ -82,7 +89,6 @@ function getDateParam(dateParam,heureParam){
     }else{
         heureParam = heureParam.replaceAll(':','');
     }
-    console.log(dateParam+'T'+heureParam+'Z')
     return dateParam+'T'+heureParam+'Z';
 }
 
@@ -215,10 +221,10 @@ function parseCalendrier(output,endLine){
 
 module.exports = Calendrier.prototype;
 
-/*
+
 var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
-var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
-//calendar.afficherCoursJour(22,3,2018);
+//var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
+calendar.afficherCoursJour('2018-03-19');
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
