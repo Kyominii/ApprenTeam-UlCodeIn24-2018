@@ -42,7 +42,6 @@ function initClients() {
 		version_date: '2016-09-20'
 	});
 	console.log('Connected to Watson Conversation');
-
 	resolve("Done");
   });
   }
