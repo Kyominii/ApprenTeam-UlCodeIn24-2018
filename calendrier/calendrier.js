@@ -54,6 +54,7 @@ function Calendrier(calendrier){
     this.cours.sort(function (a,b){
         return a.dateDebut-b.dateDebut;
     });
+
 }
 
 var TEXTE_JOUR = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
@@ -125,7 +126,7 @@ Cours.prototype.getDateLongue = function (date) {
  * @returns vrai si ce sont les mêmes dates
  */
 function dateEgales (dateA,dateB,strict) {
-    if(dateA.getFullYear() == dateB.getFullYear() && dateA.getMonth() == dateB.getMonth() && dateA.getDay() == dateB.getDay()) {
+    if(dateA.getFullYear() == dateB.getFullYear() && dateA.getMonth() == dateB.getMonth() && dateA.getDate() == dateB.getDate()) {
         return !(strict && dateA.getHours() != dateB.getHours());
     }
     return false;
