@@ -100,6 +100,9 @@ function callADE(response) {
 		case "scenario1_journee":
 			console.log('ok');
 			return ADE.afficherCoursJour(response.entities[0].value);
+        case "scenario3_reveil":
+            console.log('ok');
+            return ADE.premierCoursDeLaJournee(response.entities[0].value);
 	}
 
 }
