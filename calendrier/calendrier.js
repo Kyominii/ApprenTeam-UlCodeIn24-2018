@@ -183,7 +183,7 @@ Calendrier.prototype = {
                 }
                 retour += 'à '+cour.getHeureLongue(cour.dateDebut)+', un '+cour.nom
                 if(cour.salle != ''){
-                    retour += ' en salle '+cour.salle;
+                    retour += ' en salle '+cour.salle.replaceAll('_',' ');
                 }
                 retour += "\n";
             });
