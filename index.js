@@ -1,40 +1,163 @@
-var http = require('http');
+'use strict';
 
-var server = http.createServer(function(req, res) {
-  res.writeHead(200);
-  var json = {
-	  "conversationToken": "[]",
-	  "expectUserResponse": true,
-	  "expectedInputs": [
-		{
-		  "inputPrompt": {
-			"richInitialPrompt": {
-			  "items": [
-				{
-				  "simpleResponse": {
-					"textToSpeech": "COucou"
-				  }
-				}
-			  ]
-			}
-		  },
-		  "possibleIntents": [
-			{
-			  "intent": "assistant.intent.action.TEXT"
-			}
-		  ],
-		  "speechBiasingHints": [
-			"$agenda",
-			"$conversation-type"
-		  ]
+const ConversationV1 = require('watson-developer-cloud/conversation/v1');
+const redis = require('redis');
+
+var express = require('express');
+var app = express();
+var port = process.env.PORT || 8080;
+var bodyParser = require('body-parser');
+
+var memory = {};
+
+require('dotenv').config();
+
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
+// Using some globals for now
+let conversation;
+let context;
+let Wresponse;
+
+function errorResponse(reason) {
+	return {
+	  version: '1.0',
+	  response: {
+		shouldEndSession: true,
+		outputSpeech: {
+		  type: 'PlainText',
+		  text: reason || 'An unexpected error occurred. Please try again later.'
 		}
-	  ],
-	  "responseMetadata": {
-		"status": {},
-		"queryMatchInfo": {}
 	  }
-	  
 	};
-  res.end(JSON.stringify(json));
-});
-server.listen(8080);
+  }
+
+function initClients() {
+	return new Promise(function(resolve, reject) {
+	// Connect a client to Watson Conversation
+	conversation = new ConversationV1({
+		password: process.env.WCS_Password,
+        username: process.env.WCS_Username,
+		version_date: '2016-09-20'
+	});
+	console.log('Connected to Watson Conversation');
+	resolve("Done");
+  });
+  }
+
+function conversationMessage(request, workspaceId) {
+	return new Promise(function(resolve, reject) {
+	  const input = request.inputs[0] ? request.inputs[0].rawInputs[0].query : 'start skill';
+		var test = {
+			input: { text: input },
+			workspace_id: workspaceId,
+			context: context
+			//context: {}
+		  };
+	  console.log("Input" + JSON.stringify(test,null,2));
+	  conversation.message(
+		{
+		  input: { text: input },
+		  workspace_id: workspaceId,
+		  context: context
+		},
+		function(err, watsonResponse) {
+		  if (err) {
+			console.error(err);
+			reject('Error talking to Watson.');
+		  } else {
+			console.log(watsonResponse);
+			context = watsonResponse.context; // Update global context			
+			resolve(watsonResponse);
+		  }
+		}
+	  );
+	});
+  }
+
+function getSessionContext(sessionId) {
+	console.log('sessionId: ' + sessionId); 
+	return new Promise(function(resolve, reject) {
+	  context = memory[sessionId];
+	  resolve();
+	});
+  }
+  
+  function saveSessionContext(sessionId) {
+		console.log('---------');
+		console.log('Begin saveSessionContext ' + sessionId);
+  
+		if(context){
+			memory[sessionId] = context;
+		}
+  }
+
+function sendResponse(response, resolve) {
+	
+	  // Combine the output messages into one message.
+	  const output = response.output.text.join(' ');
+	  var resp = {
+		conversationToken: null,
+		expectUserResponse: true,
+		expectedInputs: [
+			{
+				inputPrompt: {
+					richInitialPrompt: {
+						items: [
+							{
+								simpleResponse: {
+									textToSpeech: output,
+									displayText: output
+								}
+							}
+						],
+						suggestions: []
+					}
+				},
+				possibleIntents: [
+					{
+						intent: 'actions.intent.TEXT'
+					}
+				]
+			}
+		]
+	};
+	
+	Wresponse =  resp;
+	// Resolve the main promise now that we have our response
+	resolve(resp);
+	}
+
+app.post('/api/google4IBM', function(args, res) {
+	return new Promise(function(resolve, reject) {
+	  const request = args.body;
+	  console.log("Google Home is calling");
+	  console.log(JSON.stringify(request,null,2));
+	  const sessionId = args.body.conversation.conversationId;
+	  initClients()
+	  .then(() => getSessionContext(sessionId))
+	  .then(() => conversationMessage(request, process.env.workspace_id))
+	  .then(actionResponse => sendResponse(actionResponse, resolve))
+	  .then(data => {
+		res.setHeader('Content-Type', 'application/json');
+		res.append("Google-Assistant-API-Version", "v2");
+		res.json(Wresponse);
+	})
+	.then(() => saveSessionContext(sessionId))    
+	.catch(function (err) {
+		console.error('Erreur !');
+		console.dir(err);
+	});
+	});
+  });
+
+/*
+	res.setHeader('Content-Type', 'application/json')
+	res.append("Google-Assistant-API-Version", "v2")
+*/
+
+
+// start the server
+app.listen(port);
+console.log('Server started! At http://localhost:' + port);
