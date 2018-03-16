@@ -213,9 +213,13 @@ function parseCalendrier(output,endLine){
     return new Calendrier(calendrier);
 }
 
+module.exports = {
+  'Calendrier' : Calendrier.prototype
+};
+/*
 var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 //calendar.afficherCoursJour(22,3,2018);
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
-//console.log(calendar.getCoursHeure(23,3,2018,16,0));
+//console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
