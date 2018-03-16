@@ -141,6 +141,25 @@ function dateEgales (dateA,dateB,strict) {
     return false;
 }
 
+function getPhraseDebut(date){
+    var retour = 'Le ';
+    var ojd = new Date('2018-03-31');
+    if(date.getFullYear() == ojd.getFullYear()) {
+        if (date.getMonth() == ojd.getMonth()) {
+            if (date.getDate() == ojd.getDate()) {
+                retour = "Aujourd'hui, ";
+            } else if (date.getDate() == ojd.getDate() + 1) {
+                retour = "Demain, ";
+            }
+        }else if(date.getMonth() == ojd.getMonth() + 1){
+            if (ojd.getDate() == new Date(date.getFullYear(), date.getMonth(), 0).getDate()) {
+                retour = "Demain, ";
+            }
+        }
+    }
+    return retour += TEXTE_JOUR[date.getDay()]+' '+date.getDate()+' '+TEXTE_MOIS[date.getMonth()]+' ';
+}
+
 Calendrier.prototype = {
     cours : [],
     getCoursDuJour : function (dateParam) {
@@ -167,16 +186,22 @@ Calendrier.prototype = {
 
         return res;
     },
+    premierCoursDeLaJournee : function(dateParam){
+        var cours = this.getCoursDuJour(dateParam);
+        var date = createDate(getDateParam(dateParam));
+        var retour = getPhraseDebut(date);
+        if(cours.length == 0){
+            retour += "vous n'avez pas de cours.";
+        }else {
+            retour += "vous commencez à "+cours[0].getHeureLongue(cours[0].dateDebut);
+        }
+        return retour;
+
+    },
     afficherCoursJour : function(dateParam){
         var cours = this.getCoursDuJour(dateParam);
         var date = createDate(getDateParam(dateParam));
-        var retour = '';
-        if(dateEgales(date,new Date())){
-            retour = "Aujourd'hui, ";
-        }else{
-            retour = "Le ";
-        }
-        retour += TEXTE_JOUR[date.getDay()]+' '+date.getDate()+' '+TEXTE_MOIS[date.getMonth()]+' ';
+        var retour = getPhraseDebut(date);
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
         }else {
@@ -243,6 +268,6 @@ module.exports = Calendrier.prototype;
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 
-Calendrier.prototype.afficherCoursJour('2018-05-24');
+console.log(Calendrier.prototype.premierCoursDeLaJournee('2018-04-01'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
