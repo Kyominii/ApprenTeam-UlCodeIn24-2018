@@ -134,6 +134,7 @@ function dateEgales (dateA,dateB,strict) {
 Calendrier.prototype = {
     cours : [],
     getCoursDuJour : function (dateParam) {
+        this.cours = getCalendrier(ressources,nbWeeks,timestamp).cours;
         var calendrier = this;
         var res = [];
         var recherche = getDateParam(dateParam);
@@ -145,6 +146,7 @@ Calendrier.prototype = {
         return res;
     },
     getCoursHeure : function (dateParam,heureParam) {
+        this.cours = getCalendrier(ressources,nbWeeks,timestamp).cours;
         var res = [];
         var recherche = getDateParam(dateParam,heureParam);
         this.cours.forEach(function(cours){
@@ -222,9 +224,10 @@ function parseCalendrier(output,endLine){
 module.exports = Calendrier.prototype;
 
 
-var calendar = getCalendrier(ressources,nbWeeks,timestamp);
+//var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
-calendar.afficherCoursJour('2018-03-19');
+
+Calendrier.prototype.afficherCoursJour('2018-03-19');
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
