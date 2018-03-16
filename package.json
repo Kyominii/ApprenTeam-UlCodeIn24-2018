@@ -1,0 +1,26 @@
+{
+  "name": "ul.googlehomestudentagenda",
+  "version": "1.0.0",
+  "description": "Un outil permettant de demandé à son google home son emploi du temps en tant qu'étudiant à l'Université de Lorraine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyominii/ApprenTeam-UlCodeIn24-2018.git"
+  },
+  "keywords": [
+    "google",
+    "home",
+    "watson",
+    "ibm",
+    "ade"
+  ],
+  "author": "ApprenTeam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kyominii/ApprenTeam-UlCodeIn24-2018/issues"
+  },
+  "homepage": "https://github.com/Kyominii/ApprenTeam-UlCodeIn24-2018#readme"
+}
