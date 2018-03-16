@@ -1,26 +1,26 @@
 {
   "actions": [
     {
-      "description": "Default Welcome Intent",
+      "description": "Test hello world",
       "name": "MAIN",
       "fulfillment": {
-        "conversationName": "<INSERT YOUR CONVERSATION NAME HERE>"
+        "conversationName": "hello world"
       },
       "intent": {
         "name": "actions.intent.MAIN",
         "trigger": {
           "queryPatterns": [
-            "talk to ApprenTeam"
+            "parler à ApprenTeam"
           ]
         }
       }
     }
   ],
   "conversations": {
-    "<INSERT YOUR CONVERSATION NAME HERE>": {
-      "name": "<INSERT YOUR CONVERSATION NAME HERE>",
-      "url": "<INSERT YOUR FULLFILLMENT URL HERE>"
+    "hello world": {
+      "name": "hello world",
+      "url": "https://01a7dc1f.ngrok.io/"
     }
   },
-  "locale": "en"
+  "locale": "fr"
 }
