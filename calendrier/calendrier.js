@@ -193,7 +193,7 @@ Calendrier.prototype = {
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
         }else {
-            retour += "vous commencez à "+cours[0].getHeureLongue(cours[0].dateDebut)+", vous pouvez mettre votre reveil 1H plus tôt !";
+            retour += "vous commencez à "+cours[0].getHeureLongue(cours[0].dateDebut)+", vous pourriez mettre votre reveil 1H plus tôt !";
         }
         return retour;
 
