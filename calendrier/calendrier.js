@@ -261,7 +261,7 @@ Calendrier.prototype = {
     },
     nbHeuresCoursDansLaPeriode : function(dateDebut,dateFin){
         var cours = this.getCoursPeriode(dateDebut,dateFin);
-        var date = getMinDate(dateParam);
+        var date = getMinDate(dateDebut);
         var retour = '';
 
         if(cours.length == 0){
