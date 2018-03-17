@@ -417,11 +417,11 @@ Calendrier.prototype = {
     afficherDureeCoursHeure : function(dateParam,heureParam){
         var cours = this.getCoursHeure(dateParam,heureParam);
         var date = getMinDate(dateParam);
-        var retour = getPhraseDebut(date);
+        var retour;
         if(cours.length == 0){
-            retour += "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
+            retour = "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
         }else {
-            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" votre cours de "+cours[0].nom+" dure "+afficherHeure(cours[0].dureeDuCours());
+            retour = "Ce cours dure "+afficherHeure(cours[0].dureeDuCours());
             retour += ".\r\n";
         }
         return retour;
@@ -429,11 +429,11 @@ Calendrier.prototype = {
     afficherEnseignant : function(dateParam,heureParam){
         var cours = this.getCoursHeure(dateParam,heureParam);
         var date = getMinDate(dateParam);
-        var retour = getPhraseDebut(date);
+        var retour;
         if(cours.length == 0){
-            retour += "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
+            retour = "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
         }else {
-            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" votre cours de "+cours[0].nom+" sera donné par "+cours[0].enseignant;
+            retour = "Ce cours sera donné par " + cours[0].enseignant;
             retour += ".\r\n";
         }
         return retour;

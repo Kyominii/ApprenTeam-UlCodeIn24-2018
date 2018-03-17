@@ -135,14 +135,13 @@ function callADE(response) {
 			}
 			break;
 		case  "scenario7_quelleDuree":
-			console.log(precedentContext["scenario6_quelCoursDate"]);
 			if(precedentContext["scenario6_quelCoursDate"] !== undefined) {
                 text = ADE.afficherDureeCoursHeure(precedentContext["scenario6_quelCoursDate"].date_4, precedentContext["scenario6_quelCoursDate"].time_1);
 			}
 			break;
 		case "scenario8_quelProf":
             if(precedentContext["scenario6_quelCoursDate"] !== undefined) {
-                //text = ADE.afficherDureeCoursHeure(precedentContext["scenario6_quelCoursDate"].date_4, precedentContext["scenario6_quelCoursDate"].time_1);
+                text = ADE.afficherEnseignant(precedentContext["scenario6_quelCoursDate"].date_4, precedentContext["scenario6_quelCoursDate"].time_1);
             }
 			break;
         case "scenario9_coursSuivant":
@@ -152,8 +151,7 @@ function callADE(response) {
             break;
         case "scenario10_examen":
             if((response.entities[1] !== undefined) && (response.entities[2] !== undefined)) {
-                //text = ADE.afficherDureeCoursHeure(precedentContext["scenario6_quelCoursDate"].date_4, precedentContext["scenario6_quelCoursDate"].time_1);
-            	text = ADE.afficherProchainCours(true, response.entities[1].value, response.entities[2].value);
+                text = ADE.afficherProchainCours(true, response.entities[1].value, response.entities[2].value);
             } else {
                 text = ADE.afficherProchainCours(true);
 			}
