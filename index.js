@@ -4,6 +4,7 @@ const ConversationV1 = require('watson-developer-cloud/conversation/v1');
 const ADE = require('./calendrier/calendrier');
 const redis = require('redis');
 const allocine = require('allocine-api');
+const sync = require('sync');
 
 var express = require('express');
 var app = express();
@@ -123,6 +124,7 @@ function callADE(response) {
         		text = ADE.premierCoursDeLaJournee(response.entities[0].value);
 			}
 			break;
+
         case "scenario4_finDeJournee":
         	if(response.entities[0] !== undefined) {
                 text = ADE.dernierCoursDeLaJournee(response.entities[0].value);
@@ -165,17 +167,34 @@ function callADE(response) {
                 precedentContext["scenario6_quelCoursDate"] = context;
                 precedentContext["scenario6_quelCoursDate"].date_4 = object.date;
                 precedentContext["scenario6_quelCoursDate"].time_1 = object.heure;
-                console.log(precedentContext);
             }
             break;
 
         case "scenario10_examen":
-            if((response.entities[1] !== undefined) && (response.entities[2] !== undefined)) {
-                text = ADE.afficherProchainCours(true, response.entities[1].value, response.entities[2].value);
-            } else {
-                text = ADE.afficherProchainCours(true);
-			}
+        if((response.entities[1] !== undefined) && (response.entities[2] !== undefined)) {
+            text = ADE.afficherProchainCours(true, response.entities[1].value, response.entities[2].value);
+        } else {
+            text = ADE.afficherProchainCours(true);
+        }
+        break;
+
+        case "scenario11_groupe":
+            if((response.context.EcoleList !== undefined) && (response.context.anneeList !== undefined) && (response.context.groupeList !== undefined)) {
+                text = ADE.afficherProchainCoursAvecGroupe(response.context.EcoleList,response.context.anneeList,response.context.groupeList);
+            }
             break;
+
+		case "scenario12_coursPrecedent":
+			console.log('----');
+			console.log(response);
+            if((response.entities[1] !== undefined) && (response.entities[2] !== undefined)) {
+                var object2 = ADE.afficherCoursPrecendent(response.entities[1].value, response.entities[2].value);
+            	text = object2.text;
+                precedentContext["scenario6_quelCoursDate"] = context;
+                precedentContext["scenario6_quelCoursDate"].date_4 = object2.date;
+                precedentContext["scenario6_quelCoursDate"].time_1 = object2.heure;
+            }
+			break;
 
 		case "scenario_changer_groupe":
 			if((response.context.ecole !== undefined) && (response.context.number !== undefined) && (response.context.classe !== undefined)) {
@@ -185,14 +204,24 @@ function callADE(response) {
 			break;
 
 		case "scenario_cinema":
-            if(response.context.cinema !== undefined) {
-            	getFilmCinema(cinemas[response.context.cinema])
-					.then((t) => {
-						text = t;
-					});
-                while(text === ""){}
+            if(response.entities[0].value !== undefined) {
+            	console.log(cinemas[response.entities[0].value]);
+            	text = getFilmCinema(cinemas[response.entities[0].value]);
+            	console.log('text 2 = ' + text);
             }
             break;
+
+		case "login":
+			if(response.context.login !== undefined) {
+				text = ADE.getLogin(response.context.login);
+			}
+			break;
+
+		case "inscription":
+			if(response.context.inscription !== undefined) {
+				text = ADE.saveLogin(response.context.inscription);
+			}
+			break;
 
 		default:
 			text = "Je ne sais pas quoi vous répondre";
@@ -211,11 +240,12 @@ let cinemas = {
 	"UGC Ludres": "P0090",
 	"Cameo Saint Sebastien": "P0108",
 	"Kinepolis": "P1665"
-}
+};
 
 function getFilmCinema(idCinema) {
-    return new Promise(function(resolve, reject) {
-        allocine.api('movielist', {
+    //return new Promise(function(resolve, reject) {
+	var text = "";
+	allocine.api.sync('movielist', {
             code: idCinema,
             count: 1,
             filter: "nowshowing",
@@ -223,13 +253,16 @@ function getFilmCinema(idCinema) {
         }, (error, results) => {
             if (error) {
                 console.log('Error : ' + error);
-                reject();
+                //reject();
             }
 
-            console.log('Voici les données retournées par l\'API Allociné:');
-            resolve("Je vous conseille d'aller voir " + results.feed.movie.title);
+            console.log('Voici les données retournées par l\'API Allociné:' + results.feed.movie[0].title);
+            text = "Je vous conseille d'aller voir " + results.feed.movie.title;
         });
-    });
+
+	console.log(text);
+	sleep(1);
+	return text;
 }
 
 function sendResponse(response, resolve) {
