@@ -119,6 +119,7 @@ function Cours(nom,salle,dateFin,dateDebut,description){
     this.dateDebut = createDate(dateDebut);
     this.dateFin = createDate(dateFin);
     this.description = description;
+    this.enseignant = description.split("\\n")[3];
 }
 
 Cours.prototype.getJourLong = function(date) {
@@ -200,6 +201,9 @@ Calendrier.prototype = {
         var groupeDatas = groupe.split('_');
         if(groupeDatas.indexOf('classe') == 0){
             groupe = groupeDatas[1];
+            if(groupe == 'de'){
+                groupe = '2';
+            }
         }
 
         console.log("Groupe info => "+ecole+" "+annee+" "+groupe);
@@ -215,7 +219,7 @@ Calendrier.prototype = {
         }
         if(id != -1) {
             ressources = id;
-            return "Vous êtes en " + annee.replaceAll('_', ' ') + ", groupe " + groupe + " à " + ecole.replaceAll('_', ' ') + ".";
+            return "Vous êtes en " + annee.replaceAll('_', ' ') + ", groupe " + groupe.replaceAll('_', ' ') + " à " + ecole.replaceAll('_', ' ') + ".";
         }else{
             return "Votre groupe n'est pas connu";
         }
@@ -365,7 +369,7 @@ Calendrier.prototype = {
         }
         return retour;
     },
-    afficherProchainCours : function(){
+    afficherProchainCours : function(exam){
         var date = new Date();
         var jour = (date.getDate().toString().length == 2?date.getDate():"0"+date.getDate());
         var moisDebut = (date.getMonth().toString().length == 2?(date.getMonth()+1):"0"+(date.getMonth()+1));
@@ -382,15 +386,22 @@ Calendrier.prototype = {
             var trouve = false;
             cours.forEach(function (cour) {
                 if(!trouve && cour.dateDebut >= date){
-                    trouve = true;
-                    retour += getPhraseDebut(cour.dateDebut)+"à "+cour.getHeureLongue(cour.dateDebut)+" vous assisterez "+cours[0].nom;
-                    if(cours[0].salle != ''){
-                        retour += ' en salle '+cour.salle.replaceAll('_',' ');
+                    if((exam && (cour.nom.toLowerCase().indexOf('exam') != -1 || cour.nom.toLowerCase().indexOf('ds') != -1)) || !exam){
+                        trouve = true;
+                        retour += getPhraseDebut(cour.dateDebut)+"à "+cour.getHeureLongue(cour.dateDebut)+" vous assisterez "+cour.nom;
+                        if(cour.salle != ''){
+                            retour += ' en salle '+cour.salle.replaceAll('_',' ');
+                        }
+
                     }
                 }
             });
             if(!trouve){
-                retour += "Vous n'avez pas de cours";
+                if(exam) {
+                    retour += "Aucun examen à venir";
+                }else{
+                    retour += "Vous n'avez pas de cours";
+                }
             }
         }
         retour += ".\r\n";
@@ -449,8 +460,8 @@ module.exports = Calendrier.prototype;
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
-console.log(Calendrier.prototype.setGroupe("FST Info","deuxieme année","Classe 2"));
+console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
 
-console.log(Calendrier.prototype.afficherProchainCours());
+console.log(Calendrier.prototype.afficherProchainCours(true));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
