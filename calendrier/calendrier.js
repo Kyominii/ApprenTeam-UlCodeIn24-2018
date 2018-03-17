@@ -187,10 +187,15 @@ Calendrier.prototype = {
         }
         var anneeDatas = annee.split(' ');
         if (annee.length >= 2) {
-            annee = anneeDatas[annee.length - 2] + " " + anneeDatas[annee.length - 1];
+            annee = anneeDatas[anneeDatas.length - 2] + " " + anneeDatas[anneeDatas.length - 1];
             annee = annee.formatter();
         }
         groupe = groupe.formatter();
+        var groupeDatas = groupe.split('_');
+        if(groupeDatas.indexOf('groupe') == 0){
+            groupe = groupeDatas[1];
+        }
+
         console.log("Groupe info => "+ecole+" "+annee+" "+groupe);
         var fs = require('fs');
         var contents = JSON.parse(fs.readFileSync('calendrier/groupes.json', 'utf8'));
@@ -434,7 +439,7 @@ module.exports = Calendrier.prototype;
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
-//Calendrier.prototype.setGroupe("FST Info","deuxième année","Groupe 2");
+Calendrier.prototype.setGroupe("FST Info","deuxième année","Groupe 2");
 
 console.log(Calendrier.prototype.afficherProchainCours());
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
