@@ -188,7 +188,7 @@ function callADE(response) {
             if(response.context.cinema !== undefined) {
             	getFilmCinema(cinemas[response.context.cinema])
 					.then((t) => {
-						text = t;
+						return t;
 					});
             }
             break;
