@@ -105,13 +105,7 @@ function afficherHeure(minutes) {
 function getMinDate(dateTexte){
     var date = createDate(getDateParam(dateTexte),true);
     if(date < new Date()) {
-        var day = (new Date().getDay()==0?7:new Date().getDay()-1);
-        var monday = new Date(new Date().getTime() - day*24*60*60*1000);
-        if(monday < date){
-            return date;
-        }else {
-            return monday;
-        }
+       return new Date();
     }else{
         return date;
     }
@@ -182,15 +176,13 @@ function getPhraseDebut(date){
 Calendrier.prototype = {
     cours : [],
     getCoursPeriode : function (dateDebut,dateFin) {
-        dateDebut = getMinDate(dateDebut);
-        dateFin = getMinDate(dateFin);
         var timestamp = createDate(getDateParam(dateFin),true).getTime()/1000;
         var needWeeks = Math.floor((timestamp-createDate(getDateParam(dateDebut),true).getTime()/1000)/(60*60*24*7))+1;
         this.cours = getCalendrier(ressources,needWeeks,dateDebut).cours;
         var calendrier = this;
         var res = [];
-        var rechercheDebut = createDate(getDateParam(dateDebut),true);
-        var rechercheFin = createDate(getDateParam(dateFin),true);
+        var rechercheDebut = getMinDate(dateDebut);
+        var rechercheFin = getMinDate(dateFin);
         this.cours.forEach(function(cours){
             var ok = true;
             if(cours.dateDebut.getFullYear() < rechercheDebut.getFullYear()){
@@ -220,20 +212,18 @@ Calendrier.prototype = {
         return res;
     },
     getCoursDuJour : function (dateParam) {
-        dateParam = getMinDate(dateParam);
         this.cours = getCalendrier(ressources,1,dateParam).cours;
         var calendrier = this;
         var res = [];
-        var recherche = getDateParam(dateParam);
+        var recherche = getMinDate(dateParam);
         this.cours.forEach(function(cours){
-            if(dateEgales(cours.dateDebut,createDate(recherche,true))){
+            if(dateEgales(cours.dateDebut,recherche)){
                 res.push(cours);
             }
         });
         return res;
     },
     getCoursHeure : function (dateParam,heureParam) {
-        dateParam = getMinDate(dateParam);
         this.cours = getCalendrier(ressources,1,dateParam).cours;
         var res = [];
         var recherche = getDateParam(dateParam,heureParam);
@@ -246,9 +236,8 @@ Calendrier.prototype = {
         return res;
     },
     premierCoursDeLaJournee : function(dateParam){
-        dateParam = getMinDate(dateParam);
         var cours = this.getCoursDuJour(dateParam);
-        var date = createDate(getDateParam(dateParam));
+        var date = getMinDate(dateParam);
         var retour = getPhraseDebut(date);
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
@@ -259,9 +248,8 @@ Calendrier.prototype = {
 
     },
     dernierCoursDeLaJournee : function(dateParam){
-        dateParam = getMinDate(dateParam);
         var cours = this.getCoursDuJour(dateParam);
-        var date = createDate(getDateParam(dateParam));
+        var date = getMinDate(dateParam);
         var retour = getPhraseDebut(date);
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
@@ -272,11 +260,10 @@ Calendrier.prototype = {
 
     },
     nbHeuresCoursDansLaPeriode : function(dateDebut,dateFin){
-        dateDebut = getMinDate(dateDebut);
-        dateFin = getMinDate(dateFin);
         var cours = this.getCoursPeriode(dateDebut,dateFin);
-        var date = createDate(getDateParam(dateDebut));
-        var retour = getPhraseDebut(date);
+        var date = getMinDate(dateParam);
+        var retour = '';
+
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
         }else {
@@ -284,16 +271,14 @@ Calendrier.prototype = {
             cours.forEach(function (cours) {
                 nbHeures += cours.dureeDuCours();
             });
-            console.log(afficherHeure(nbHeures));
-            retour += "vous commencez à "+cours[0].getHeureLongue(cours[0].dateDebut);
+            retour += ""+cours[0].getHeureLongue(cours[0].dateDebut);
         }
         return retour;
 
     },
     afficherCoursJour : function(dateParam){
-        dateParam = getMinDate(dateParam);
         var cours = this.getCoursDuJour(dateParam);
-        var date = createDate(getDateParam(dateParam));
+        var date = getMinDate(dateParam);
         var retour = getPhraseDebut(date);
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
@@ -316,7 +301,21 @@ Calendrier.prototype = {
                 retour += ".\r\n";
             });
         }
-        console.log(retour);
+        return retour;
+    },
+    afficherCoursHeure : function(dateParam,heureParam){
+        var cours = this.getCoursHeure(dateParam,heureParam);
+        var date = getMinDate(dateParam);
+        var retour = getPhraseDebut(date);
+        if(cours.length == 0){
+            retour += "vous n'avez pas de cours.";
+        }else {
+            retour += "vous assisterez "+cours[0].nom;
+            if(cours[0].salle != ''){
+                retour += ' en salle '+cours[0].salle.replaceAll('_',' ');
+            }
+            retour += ".\r\n";
+        }
         return retour;
     }
 };
@@ -361,6 +360,6 @@ module.exports = Calendrier.prototype;
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 
-console.log(getMinDate('2018-03-02'));
+console.log(Calendrier.prototype.afficherCoursHeure('2018-03-20','14:00:00'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
