@@ -1,29 +1,31 @@
 {
-  "TELECOM Nancy" : {
-    "première année" : {
-      "Groupe 1" : "115245,116842",
-      "Groupe 2" : "116843,116844",
-      "Groupe 3" : "115245,116889",
-      "Groupe 4" : "117082,117083",
-      "Groupe 5" : "135198,135199",
-      "Apprenti" : "137137"
+  "telecom_nancy" : {
+    "premiere_annee" : {
+      "groupe_1" : "115245,116842",
+      "groupe_2" : "116843,116844",
+      "groupe_3" : "115245,116889",
+      "groupe_4" : "117082,117083",
+      "groupe_5" : "135198,135199",
+      "apprenti" : "173137"
     },
-    "deuxième année" : {
-      "IAMD" : "15158,115159,222873,222874,222875",
-      "IL" : "115156,115157",
-      "ISS" : "114692,114693",
-      "LE" : "114694,115155",
-      "SIE" : "113705,114691",
-      "Apprenti" : "173138,173139"
+    "deuxieme annee" : {
+      "iamd" : "15158,115159,222873,222874,222875",
+      "il" : "115156,115157",
+      "iss" : "114692,114693",
+      "le" : "114694,115155",
+      "sie" : "113705,114691",
+      "apprenti" : "173138,173139"
     },
-    "troisième année" : {
+    "troisieme annee" : {
 
     }
   },
-  "FST":{
-
+  "fst_info":{
+    "deuxieme_annee" : {
+      "groupe_2" : "153989"
+    }
   },
-  "IUT Nancy Charlemagne" : {
+  "iut nancy charlemagne" : {
     "Département informatique" : {
       "première année" : {
         "Groupe A" : "147722",
@@ -33,10 +35,10 @@
         "Groupe E" : "147726"
       },
       "deuxième année" : {
-        "Groupe A" : 4152,
-        "Groupe B" : 4153,
-        "Groupe C" : 10465,
-        "Groupe D" : 28107
+        "Groupe A" : "4152",
+        "Groupe B" : "4153",
+        "Groupe SI-1" : "10465",
+        "Groupe SI-2" : "28107"
       }
     }
   }

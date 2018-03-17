@@ -24,6 +24,7 @@ function getCalendrier(idGroupe,nbWeeks,dateParam) {
     }catch (e){
         console.log(e);
         body = getFromTextIfAdeFail();
+        console.log(body);
         endLine = '\n';
     }finally {
         calendrier = parseCalendrier(body,endLine);
@@ -173,8 +174,30 @@ function getPhraseDebut(date){
     return retour += TEXTE_JOUR[date.getDay()]+' '+date.getDate()+' '+TEXTE_MOIS[date.getMonth()]+' ';
 }
 
+String.prototype.formatter = function () {
+    return this.normalize('NFD').replace(/[\u0300-\u036f]/g, "").replaceAll(' ','_').toLowerCase();
+};
+
 Calendrier.prototype = {
     cours : [],
+    setGroupe : function(ecole,annee,groupe){
+        ecole = ecole.formatter();
+        annee = annee.formatter();
+        groupe = groupe.formatter();
+        console.log("Groupe info => "+ecole+" "+annee+" "+groupe);
+        var fs = require('fs');
+        var contents = JSON.parse(fs.readFileSync('calendrier/groupes.json', 'utf8'));
+        var id = -1;
+        if(contents[ecole] != undefined){
+            if(contents[ecole][annee] != undefined){
+                if(contents[ecole][annee][groupe] != undefined){
+                    id = contents[ecole][annee][groupe];
+                }
+            }
+        }
+        ressources = id;
+        console.log(ressources);
+    },
     getCoursPeriode : function (dateDebut,dateFin) {
         var timestamp = createDate(getDateParam(dateFin),true).getTime()/1000;
         var needWeeks = Math.floor((timestamp-createDate(getDateParam(dateDebut),true).getTime()/1000)/(60*60*24*7))+1;
@@ -267,7 +290,7 @@ Calendrier.prototype = {
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
         }else {
-            retour += "Entre le "+cours[0].getDateLongue(cours[0].dateDebut)+" et le "+cours[0].getDateLongue(cours[0].dateFin)+" vous aurez ";
+            retour += "Entre le "+cours[0].getDateLongue(cours[0].dateDebut)+" et le "+cours[cours.length-1].getDateLongue(cours[cours.length-1].dateFin)+" vous aurez ";
             var nbHeures = 0;
             cours.forEach(function (cour) {
                 nbHeures += cour.dureeDuCours();
@@ -360,7 +383,8 @@ module.exports = Calendrier.prototype;
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
+Calendrier.prototype.setGroupe("FST Info","deuxième année","Groupe 2");
 
-console.log(Calendrier.prototype.nbHeuresCoursDansLaPeriode('2018-04-04','2018-04-18'));
+console.log(Calendrier.prototype.nbHeuresCoursDansLaPeriode('2018-04-04','2018-04-05'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
