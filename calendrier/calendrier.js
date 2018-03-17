@@ -523,8 +523,8 @@ Calendrier.prototype = {
         }
         return retour;
     },
-    getLogin : function (prenom,nom) {
-        var login = prenom.formatter()+'_'+nom.formatter();
+    getLogin : function (login) {
+        var login = login.formatter();
         var fs = require('fs');
         var contents = fs.readFileSync('calendrier/login.json', 'utf8');
         var json = JSON.parse(contents);
@@ -537,8 +537,8 @@ Calendrier.prototype = {
             return "Login inconnu.";
         }
     },
-    saveLogin : function (prenom,nom) {
-        var login = prenom.formatter()+'_'+nom.formatter();
+    saveLogin : function (login) {
+        var login = login.formatter();
         var fs = require('fs');
         var contents = fs.readFileSync('calendrier/login.json', 'utf8');
         var json = JSON.parse(contents);
