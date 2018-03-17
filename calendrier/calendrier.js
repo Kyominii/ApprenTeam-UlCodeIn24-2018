@@ -180,9 +180,16 @@ String.prototype.formatter = function () {
 
 Calendrier.prototype = {
     cours : [],
-    setGroupe : function(ecole,annee,groupe){
+    setGroupe : function(ecole,annee,groupe) {
         ecole = ecole.formatter();
-        annee = annee.formatter();
+        if (ecole.includes('ecole')) {
+            ecole = ecole.substr(6);
+        }
+        var anneeDatas = annee.split(' ');
+        if (annee.length >= 2) {
+            annee = anneeDatas[annee.length - 2] + " " + anneeDatas[annee.length - 1];
+            annee = annee.formatter();
+        }
         groupe = groupe.formatter();
         console.log("Groupe info => "+ecole+" "+annee+" "+groupe);
         var fs = require('fs');
@@ -345,10 +352,11 @@ Calendrier.prototype = {
     },
     afficherProchainCours : function(){
         var date = new Date();
+        var jour = (date.getDate().toString().length == 2?date.getDate():"0"+date.getDate());
         var moisDebut = (date.getMonth().toString().length == 2?(date.getMonth()+1):"0"+(date.getMonth()+1));
         var moisFin = (date.getMonth().toString().length == 2?(date.getMonth()+2):"0"+(date.getMonth()+2));
-        var dateDebut = date.getFullYear()+"-"+moisDebut+"-"+date.getDate();
-        var dateFin = date.getFullYear()+"-"+moisFin+"-"+date.getDate();
+        var dateDebut = date.getFullYear()+"-"+moisDebut+"-"+jour;
+        var dateFin = date.getFullYear()+"-"+moisFin+"-"+jour;
         var heure = (date.getHours().toString().length == 2?date.getHours():"0"+date.getHours());
         var min = (date.getMinutes().toString().length == 2?date.getMinutes():"0"+date.getMinutes());
         var cours = this.getCoursPeriode(dateDebut,dateFin);
@@ -358,7 +366,7 @@ Calendrier.prototype = {
         }else {
             var trouve = false;
             cours.forEach(function (cour) {
-                if(!trouve && cour.dateDebut > date){
+                if(!trouve && cour.dateDebut >= date){
                     trouve = true;
                     retour += getPhraseDebut(cour.dateDebut)+"à "+cour.getHeureLongue(cour.dateDebut)+" vous assisterez "+cours[0].nom;
                     if(cours[0].salle != ''){
