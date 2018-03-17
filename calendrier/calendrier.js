@@ -373,19 +373,22 @@ Calendrier.prototype = {
         var date = new Date();
         var periode = true;
         var jour = (date.getDate().toString().length == 2 ? date.getDate() : "0" + date.getDate());
-        if(!dateDebut && !dateFin) {
+        if(!dateDebut) {
             var moisDebut = (date.getMonth().toString().length == 2 ? (date.getMonth() + 1) : "0" + (date.getMonth() + 1));
             dateDebut = date.getFullYear() + "-" + moisDebut + "-" + jour;
+        }
+        if(!dateFin){
             var moisFin = (date.getMonth().toString().length == 2 ? (date.getMonth() + 2) : "0" + (date.getMonth() + 2));
             dateFin = date.getFullYear() + "-" + moisFin + "-" + jour;
-            periode = false;
         }
+        if(!dateFin && !dateDebut){periode = true;}
      //   var heure = (date.getHours().toString().length == 2?date.getHours():"0"+date.getHours());
        // var min = (date.getMinutes().toString().length == 2?date.getMinutes():"0"+date.getMinutes());
         var cours = this.getCoursPeriode(dateDebut,dateFin);
         var retour = '';
         if(cours.length == 0){
-            retour = "Vous n'avez pas de cours à venir";
+            if(exam){retour = "Vous n'avez pas d'examen à venir";}
+            else{retour = "Vous n'avez pas de cours à venir";}
         }else {
             var trouve = false;
             cours.forEach(function (cour) {
