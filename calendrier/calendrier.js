@@ -376,7 +376,7 @@ Calendrier.prototype = {
         if(cours.length == 0){
             retour += "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
         }else {
-            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" vous assisterez "+cours[0].nom;
+            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" vous assisterez à "+cours[0].nom;
             if(cours[0].salle != ''){
                 retour += ' en salle '+cours[0].salle.replaceAll('_',' ');
             }
@@ -522,6 +522,33 @@ Calendrier.prototype = {
             retour += ".\r\n";
         }
         return retour;
+    },
+    getLogin : function (login) {
+        login = login.formatter();
+        var fs = require('fs');
+        var contents = fs.readFileSync('calendrier/login.json', 'utf8');
+        var json = JSON.parse(contents);
+
+        var res = '';
+        if(json[login]){
+            ressources = res;
+            return "Vous êtes connectés en tant que "+login.replaceAll('_',' ');+'.';
+        }else{
+            return "Login inconnu.";
+        }
+    },
+    saveLogin : function (login) {
+        login = login.formatter();
+        var fs = require('fs');
+        var contents = fs.readFileSync('calendrier/login.json', 'utf8');
+        var json = JSON.parse(contents);
+
+        json[login] = ressources;
+
+        var data = JSON.stringify(json);
+        fs.writeFileSync('calendrier/login.json', data);
+
+        return 'Votre identifiant est bien sauvergardé.';
     }
 };
 
@@ -560,6 +587,7 @@ function parseCalendrier(output,endLine){
 
 module.exports = Calendrier.prototype;
 
+console.log(Calendrier.prototype.getLogin("ophélien AMSLER"));
 
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
