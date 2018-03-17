@@ -267,11 +267,15 @@ Calendrier.prototype = {
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
         }else {
+            retour += "Entre le "+cours[0].getDateLongue(dateDebut)+" et le "+cours[0].getDateLongue(dateFin)+" vous aurez ";
             var nbHeures = 0;
-            cours.forEach(function (cours) {
-                nbHeures += cours.dureeDuCours();
+
+            console.log("COURS = "+cours.length);
+            cours.forEach(function (cour) {
+                nbHeures += cour.dureeDuCours();
+                console.log(cour.dureeDuCours());
             });
-            retour += ""+cours[0].getHeureLongue(cours[0].dateDebut);
+            retour += ""+cours[0].getHeureLongue(cours[0].dateDebut)+" de cours";
         }
         return retour;
 
