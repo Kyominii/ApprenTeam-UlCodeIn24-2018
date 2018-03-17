@@ -71,7 +71,7 @@ function conversationMessage(request, workspaceId) {
 			reject('Error talking to Watson.');
 		  } else {
 			console.log(watsonResponse);
-			context = watsonResponse.context; // Update global context			
+			context = watsonResponse.context; // Update global context
 			resolve(watsonResponse);
 		  }
 		}
@@ -80,17 +80,17 @@ function conversationMessage(request, workspaceId) {
   }
 
 function getSessionContext(sessionId) {
-	console.log('sessionId: ' + sessionId); 
+	console.log('sessionId: ' + sessionId);
 	return new Promise(function(resolve, reject) {
 	  context = memory[sessionId];
 	  resolve();
 	});
   }
-  
+
   function saveSessionContext(sessionId) {
 		console.log('---------');
 		console.log('Begin saveSessionContext ' + sessionId);
-  
+
 		if(context){
 			memory[sessionId] = context;
 		}
@@ -103,7 +103,7 @@ function getSessionContext(sessionId) {
 function callADE(response) {
 
 	var text = "";
-	
+
 	switch(response.output.code) {
 		case "scenario1_journee":
 			if(response.entities[0] !== undefined) {
@@ -146,7 +146,12 @@ function callADE(response) {
 			break;
         case "scenario9_coursSuivant":
             if(precedentContext["scenario6_quelCoursDate"] !== undefined) {
-                //text = ADE.afficherDureeCoursHeure(precedentContext["scenario6_quelCoursDate"].date_4, precedentContext["scenario6_quelCoursDate"].time_1);
+                var object = ADE.afficherProchainCours(false,precedentContext["scenario6_quelCoursDate"].date_4, null, precedentContext["scenario6_quelCoursDate"].time_1);
+                text = object.text;
+                precedentContext["scenario6_quelCoursDate"] = context;
+                precedentContext["scenario6_quelCoursDate"].date_4 = object.date;
+                precedentContext["scenario6_quelCoursDate"].time_1 = object.heure;
+                console.log(precedentContext);
             }
             break;
         case "scenario10_examen":
@@ -210,7 +215,7 @@ function sendResponse(response, resolve) {
 			}
 		]
 	};
-	
+
 		Wresponse =  resp;
 		// Resolve the main promise now that we have our response
 		resolve(resp);
@@ -231,7 +236,7 @@ app.post('/api/google4IBM', function(args, res) {
 		res.append("Google-Assistant-API-Version", "v2");
 		res.json(Wresponse);
 	})
-	.then(() => saveSessionContext(sessionId))    
+	.then(() => saveSessionContext(sessionId))
 	.catch(function (err) {
 		console.error('Erreur !');
 		console.dir(err);
