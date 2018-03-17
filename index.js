@@ -137,6 +137,11 @@ function callADE(response) {
                 precedentContext["scenario6_quelCoursDate"] = {};
 			}
 			break;
+		case "scenario_changer_groupe":
+			if((response.context.ecole !== undefined) && (response.context.number !== undefined) && (response.context.classe !== undefined)) {
+				text = ADE.setGroupe(response.context.ecole, response.context.number, response.context.classe);
+			}
+			break;
 		default:
 			text = "Je ne sais pas quoi vous répondre";
 			break;
