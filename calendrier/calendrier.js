@@ -369,15 +369,19 @@ Calendrier.prototype = {
         }
         return retour;
     },
-    afficherProchainCours : function(exam){
+    afficherProchainCours : function(exam,dateDebut,dateFin){
         var date = new Date();
-        var jour = (date.getDate().toString().length == 2?date.getDate():"0"+date.getDate());
-        var moisDebut = (date.getMonth().toString().length == 2?(date.getMonth()+1):"0"+(date.getMonth()+1));
-        var moisFin = (date.getMonth().toString().length == 2?(date.getMonth()+2):"0"+(date.getMonth()+2));
-        var dateDebut = date.getFullYear()+"-"+moisDebut+"-"+jour;
-        var dateFin = date.getFullYear()+"-"+moisFin+"-"+jour;
-        var heure = (date.getHours().toString().length == 2?date.getHours():"0"+date.getHours());
-        var min = (date.getMinutes().toString().length == 2?date.getMinutes():"0"+date.getMinutes());
+        var jour = (date.getDate().toString().length == 2 ? date.getDate() : "0" + date.getDate());
+        if(!dateDebut) {
+            var moisDebut = (date.getMonth().toString().length == 2 ? (date.getMonth() + 1) : "0" + (date.getMonth() + 1));
+            dateDebut = date.getFullYear() + "-" + moisDebut + "-" + jour;
+        }
+        if(!dateFin) {
+            var moisFin = (date.getMonth().toString().length == 2 ? (date.getMonth() + 2) : "0" + (date.getMonth() + 2));
+            dateFin = date.getFullYear() + "-" + moisFin + "-" + jour;
+        }
+     //   var heure = (date.getHours().toString().length == 2?date.getHours():"0"+date.getHours());
+       // var min = (date.getMinutes().toString().length == 2?date.getMinutes():"0"+date.getMinutes());
         var cours = this.getCoursPeriode(dateDebut,dateFin);
         var retour = '';
         if(cours.length == 0){
