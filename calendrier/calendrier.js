@@ -55,6 +55,7 @@ function Calendrier(calendrier){
 
 var TEXTE_JOUR = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
 var TEXTE_MOIS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','decembre'];
+var TEXTE_ANNEE = ['premiere','deuxieme','troisieme','quatrieme','cinquieme'];
 
 /**
  * Retourne un Object Date en fonction du texte en paramètre
@@ -187,7 +188,12 @@ Calendrier.prototype = {
         }
         var anneeDatas = annee.split(' ');
         if (annee.length >= 2) {
-            annee = anneeDatas[anneeDatas.length - 2] + " " + anneeDatas[anneeDatas.length - 1];
+            var num = parseInt(anneeDatas[anneeDatas.length-2][0]);
+            if(!num) {
+                annee = anneeDatas[anneeDatas.length - 2] + " " + anneeDatas[anneeDatas.length - 1];
+            }else if(anneeDatas[anneeDatas.length-2][1] == 'e'){
+                annee = TEXTE_ANNEE[num-1] + " " + anneeDatas[anneeDatas.length - 1];
+            }
             annee = annee.formatter();
         }
         groupe = groupe.formatter();
@@ -443,7 +449,7 @@ module.exports = Calendrier.prototype;
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
-Calendrier.prototype.setGroupe("FST Info","deuxième année","Groupe 2");
+console.log(Calendrier.prototype.setGroupe("FST Info","deuxieme année","Classe 2"));
 
 console.log(Calendrier.prototype.afficherProchainCours());
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
