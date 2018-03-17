@@ -334,7 +334,7 @@ Calendrier.prototype = {
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
         }else {
-            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+"vous assisterez "+cours[0].nom;
+            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" vous assisterez "+cours[0].nom;
             if(cours[0].salle != ''){
                 retour += ' en salle '+cours[0].salle.replaceAll('_',' ');
             }
