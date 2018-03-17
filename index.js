@@ -190,7 +190,10 @@ function callADE(response) {
 					.then((t) => {
 						text = t;
 					});
+                while(text === ""){}
             }
+            break;
+
 		default:
 			text = "Je ne sais pas quoi vous répondre";
 			break;
