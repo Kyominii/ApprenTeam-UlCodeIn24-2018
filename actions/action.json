@@ -1,25 +1,37 @@
 {
   "actions": [
     {
-      "description": "Action principale d'ADE UL",
-      "name": "ADE-UL",
+      "name": "MAIN",
       "fulfillment": {
-        "conversationName": "askADE"
+        "conversationName": "ADE"
       },
       "intent": {
-        "name": "actions.intent.MAIN",
+        "name": "actions.intent.MAIN"
+      }
+    },
+    {
+      "name": "DEEP",
+      "intent": {
+        "name": "io.ngrok.02546bb2.DEEP",
+        "parameters": [{
+          "name": "txt",
+          "type": "SchemaOrg_Text"
+        }],
         "trigger": {
           "queryPatterns": [
-            "Demande à ADE"
+            "SchemaOrg_Text:txt"
           ]
         }
+      },
+      "fulfillment": {
+        "conversationName": "ADE"
       }
     }
   ],
   "conversations": {
-    "askADE": {
-      "name": "askADE",
-      "url": "https://01a7dc1f.ngrok.io/service"
+    "ADE": {
+      "name": "ADE",
+      "url": "https://02546bb2.ngrok.io/api/google4IBM"
     }
   },
   "locale": "fr"
