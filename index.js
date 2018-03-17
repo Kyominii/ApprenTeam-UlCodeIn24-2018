@@ -104,6 +104,8 @@ function callADE(response) {
             return ADE.nbHeuresCoursDansLaPeriode(response.entities[0].value, response.entities[1].value);
         case "scenario3_reveil":
             return ADE.premierCoursDeLaJournee(response.entities[0].value);
+        case "scenario4_finDeJournee":
+            return ADE.dernierCoursDeLaJournee(response.entities[0].value);
 	}
 
 }
