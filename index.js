@@ -94,28 +94,44 @@ function getSessionContext(sessionId) {
 		}
   }
 
+  function clearSessionContext() {
+	context = {};
+  }
+
 function callADE(response) {
+
+	var text = "";
 	
 	switch(response.output.code) {
 		case "scenario1_journee":
 			if(response.entities[0] !== undefined) {
-                return ADE.afficherCoursJour(response.entities[0].value);
+                text = ADE.afficherCoursJour(response.entities[0].value);
 			}
+			break;
         case "scenario2_heuresPeriode":
-        	if((response.context.date !== undefined) && (response.context.date_2 !== undefined)) {
-                return ADE.nbHeuresCoursDansLaPeriode(response.context.date, response.context.date_2);
+        	if((response.context.date_1 !== undefined) && (response.context.date_2 !== undefined)) {
+                text = ADE.nbHeuresCoursDansLaPeriode(response.context.date_1, response.context.date_2);
 			}
+			break;
         case "scenario3_reveil":
         	if(response.entities[0] !== undefined) {
-                return ADE.premierCoursDeLaJournee(response.entities[0].value);
+        		text = ADE.premierCoursDeLaJournee(response.entities[0].value);
 			}
+			break;
         case "scenario4_finDeJournee":
         	if(response.entities[0] !== undefined) {
-                return ADE.dernierCoursDeLaJournee(response.entities[0].value);
+                text = ADE.dernierCoursDeLaJournee(response.entities[0].value);
 			}
+			break;
+		default:
+			text = "Je ne sais pas pas quoi vous répondre";
+			break;
 	}
 
-	return "Je ne sais pas pas quoi vous répondre";
+	if(text !== "") {
+		clearSessionContext();
+	}
+	return text;
 
 }
 
@@ -156,9 +172,9 @@ function sendResponse(response, resolve) {
 		]
 	};
 	
-	Wresponse =  resp;
-	// Resolve the main promise now that we have our response
-	resolve(resp);
+		Wresponse =  resp;
+		// Resolve the main promise now that we have our response
+		resolve(resp);
 	}
 
 app.post('/api/google4IBM', function(args, res) {
