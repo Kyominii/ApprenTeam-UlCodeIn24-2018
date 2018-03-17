@@ -249,9 +249,10 @@ Calendrier.prototype = {
     getCoursHeure : function (dateParam,heureParam) {
         this.cours = getCalendrier(ressources,1,dateParam).cours;
         var res = [];
-        var recherche = getDateParam(dateParam,heureParam);
+        var recherche = createDate(getDateParam(dateParam,heureParam),true);
         this.cours.forEach(function(cours){
-            if(dateEgales(cours.dateDebut,createDate(recherche,true),true)){
+            if(dateEgales(cours.dateDebut,recherche,false)){
+                if(cours.dateDebut.getHours() <= recherche.getHours() && cours.dateFin.getHours() >= recherche.getHours())
                 res.push(cours);
             }
         });
@@ -332,12 +333,24 @@ Calendrier.prototype = {
         var date = getMinDate(dateParam);
         var retour = getPhraseDebut(date);
         if(cours.length == 0){
-            retour += "vous n'avez pas de cours.";
+            retour += "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
         }else {
             retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" vous assisterez "+cours[0].nom;
             if(cours[0].salle != ''){
                 retour += ' en salle '+cours[0].salle.replaceAll('_',' ');
             }
+            retour += ".\r\n";
+        }
+        return retour;
+    },
+    afficherDureeCoursHeure : function(dateParam,heureParam){
+        var cours = this.getCoursHeure(dateParam,heureParam);
+        var date = getMinDate(dateParam);
+        var retour = getPhraseDebut(date);
+        if(cours.length == 0){
+            retour += "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
+        }else {
+            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" votre cours de "+cours[0].nom+" dure "+afficherHeure(cours[0].dureeDuCours());
             retour += ".\r\n";
         }
         return retour;
@@ -383,8 +396,8 @@ module.exports = Calendrier.prototype;
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
-Calendrier.prototype.setGroupe("FST Info","deuxième année","Groupe 2");
+//Calendrier.prototype.setGroupe("FST Info","deuxième année","Groupe 2");
 
-console.log(Calendrier.prototype.nbHeuresCoursDansLaPeriode('2018-03-04','2018-04-05'));
+console.log(Calendrier.prototype.afficherDureeCoursHeure('2018-03-19','09:00:00'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
