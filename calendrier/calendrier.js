@@ -532,9 +532,8 @@ Calendrier.prototype = {
         var contents = fs.readFileSync('calendrier/login.json', 'utf8');
         var json = JSON.parse(contents);
 
-        var res = '';
         if(json[login]){
-            ressources = res;
+            ressources = json[login];
             return "Vous êtes connectés en tant que "+login.replaceAll('_',' ');+'.';
         }else{
             return "Login inconnu.";
