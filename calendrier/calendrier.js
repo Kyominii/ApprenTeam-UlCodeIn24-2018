@@ -525,6 +525,9 @@ Calendrier.prototype = {
     },
     getLogin : function (login) {
         var login = login.formatter();
+        if(login.indexOf('login') == 0){
+            login = login.substr(6);
+        }
         var fs = require('fs');
         var contents = fs.readFileSync('calendrier/login.json', 'utf8');
         var json = JSON.parse(contents);
@@ -539,6 +542,9 @@ Calendrier.prototype = {
     },
     saveLogin : function (login) {
         var login = login.formatter();
+        if(login.indexOf('login') == 0){
+            login = login.substr(6);
+        }
         var fs = require('fs');
         var contents = fs.readFileSync('calendrier/login.json', 'utf8');
         var json = JSON.parse(contents);
