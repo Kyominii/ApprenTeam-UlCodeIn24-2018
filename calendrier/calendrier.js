@@ -404,7 +404,7 @@ Calendrier.prototype = {
                 if(exam) {
                     retour += "Aucun examen à venir";
                 }else{
-                    retour += "Vous n'avez pas de cours";
+                    retour += "Aucun cours trouvé";
                 }
             }
         }
@@ -419,6 +419,18 @@ Calendrier.prototype = {
             retour += "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
         }else {
             retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" votre cours de "+cours[0].nom+" dure "+afficherHeure(cours[0].dureeDuCours());
+            retour += ".\r\n";
+        }
+        return retour;
+    },
+    afficherEnseignant : function(dateParam,heureParam){
+        var cours = this.getCoursHeure(dateParam,heureParam);
+        var date = getMinDate(dateParam);
+        var retour = getPhraseDebut(date);
+        if(cours.length == 0){
+            retour += "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
+        }else {
+            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" votre cours de "+cours[0].nom+" sera donné par "+afficherHeure(cours[0].enseignant);
             retour += ".\r\n";
         }
         return retour;
@@ -466,6 +478,6 @@ module.exports = Calendrier.prototype;
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
 
-console.log(Calendrier.prototype.afficherProchainCours(true));
+console.log(Calendrier.prototype.afficherEnseignant('2018-04-10','08:00:00'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
