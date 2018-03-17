@@ -371,44 +371,47 @@ Calendrier.prototype = {
     },
     afficherProchainCours : function(exam,dateDebut,dateFin){
         var date = new Date();
+        var periode = true;
         var jour = (date.getDate().toString().length == 2 ? date.getDate() : "0" + date.getDate());
-        if(!dateDebut) {
+        if(!dateDebut && !dateFin) {
             var moisDebut = (date.getMonth().toString().length == 2 ? (date.getMonth() + 1) : "0" + (date.getMonth() + 1));
             dateDebut = date.getFullYear() + "-" + moisDebut + "-" + jour;
-        }
-        if(!dateFin) {
             var moisFin = (date.getMonth().toString().length == 2 ? (date.getMonth() + 2) : "0" + (date.getMonth() + 2));
             dateFin = date.getFullYear() + "-" + moisFin + "-" + jour;
+            periode = false;
         }
      //   var heure = (date.getHours().toString().length == 2?date.getHours():"0"+date.getHours());
        // var min = (date.getMinutes().toString().length == 2?date.getMinutes():"0"+date.getMinutes());
         var cours = this.getCoursPeriode(dateDebut,dateFin);
         var retour = '';
         if(cours.length == 0){
-            retour += "Vous n'avez pas de cours";
+            retour = "Vous n'avez pas de cours à venir";
         }else {
             var trouve = false;
             cours.forEach(function (cour) {
-                if(!trouve && cour.dateDebut >= date){
+                if((!trouve || exam)&& cour.dateDebut >= date){
                     if((exam && (cour.nom.toLowerCase().indexOf('exam') != -1 || cour.nom.toLowerCase().indexOf('ds') != -1)) || !exam){
                         trouve = true;
-                        retour += getPhraseDebut(cour.dateDebut)+"à "+cour.getHeureLongue(cour.dateDebut)+" vous assisterez "+cour.nom;
+                        retour += getPhraseDebut(cour.dateDebut)+"à "+cour.getHeureLongue(cour.dateDebut)+" vous assisterez à "+cour.nom;
                         if(cour.salle != ''){
                             retour += ' en salle '+cour.salle.replaceAll('_',' ');
                         }
-
+                        retour += ".\r\n";
                     }
                 }
             });
             if(!trouve){
                 if(exam) {
-                    retour += "Aucun examen à venir";
+                    retour = "Aucun examen à venir.\r\n";
                 }else{
-                    retour += "Aucun cours trouvé";
+                    retour = "Aucun cours trouvé.\r\n";
+                }
+            }else{
+                if(exam && periode){
+                    retour = "Entre le "+cours[0].getDateLongue(cours[0].dateDebut)+" et le "+cours[cours.length-1].getDateLongue(cours[cours.length-1].dateFin)+" vous aurez les examens suivants : "+retour;
                 }
             }
         }
-        retour += ".\r\n";
         return retour;
     },
     afficherDureeCoursHeure : function(dateParam,heureParam){
@@ -430,7 +433,7 @@ Calendrier.prototype = {
         if(cours.length == 0){
             retour += "vous n'avez pas de cours à "+heureParam.substr(0,2)+"h.";
         }else {
-            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" votre cours de "+cours[0].nom+" sera donné par "+afficherHeure(cours[0].enseignant);
+            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+" votre cours de "+cours[0].nom+" sera donné par "+cours[0].enseignant;
             retour += ".\r\n";
         }
         return retour;
@@ -476,8 +479,8 @@ module.exports = Calendrier.prototype;
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
-console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
+//console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
 
-console.log(Calendrier.prototype.afficherEnseignant('2018-04-10','08:00:00'));
+//console.log(Calendrier.prototype.afficherProchainCours(true,'2018-03-10','2018-06-10'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
