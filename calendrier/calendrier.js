@@ -180,9 +180,16 @@ String.prototype.formatter = function () {
 
 Calendrier.prototype = {
     cours : [],
-    setGroupe : function(ecole,annee,groupe){
+    setGroupe : function(ecole,annee,groupe) {
         ecole = ecole.formatter();
-        annee = annee.formatter();
+        if (ecole.includes('ecole')) {
+            ecole = ecole.substr(6);
+        }
+        var anneeDatas = annee.split(' ');
+        if (annee.length >= 2) {
+            annee = anneeDatas[annee.length - 2] + " " + anneeDatas[annee.length - 1];
+            annee = annee.formatter();
+        }
         groupe = groupe.formatter();
         console.log("Groupe info => "+ecole+" "+annee+" "+groupe);
         var fs = require('fs');
