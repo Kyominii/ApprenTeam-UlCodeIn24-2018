@@ -389,7 +389,7 @@ Calendrier.prototype = {
         }else {
             var trouve = false;
             cours.forEach(function (cour) {
-                if((!trouve || exam)&& cour.dateDebut >= date){
+                if((!trouve || periode)&& cour.dateDebut >= date){
                     if((exam && (cour.nom.toLowerCase().indexOf('exam') != -1 || cour.nom.toLowerCase().indexOf('ds') != -1)) || !exam){
                         trouve = true;
                         retour += getPhraseDebut(cour.dateDebut)+"à "+cour.getHeureLongue(cour.dateDebut)+" vous assisterez à "+cour.nom;
@@ -481,6 +481,6 @@ module.exports = Calendrier.prototype;
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 //console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
 
-//console.log(Calendrier.prototype.afficherProchainCours(true,'2018-03-10','2018-06-10'));
+console.log(Calendrier.prototype.afficherProchainCours(true,'2018-03-10','2018-06-10'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
