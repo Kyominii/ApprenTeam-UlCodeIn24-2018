@@ -110,11 +110,13 @@ function callADE(response) {
                 text = ADE.afficherCoursJour(response.entities[0].value);
 			}
 			break;
+
         case "scenario2_heuresPeriode":
         	if((response.context.date_1 !== undefined) && (response.context.date_2 !== undefined)) {
                 text = ADE.nbHeuresCoursDansLaPeriode(response.context.date_1, response.context.date_2);
 			}
 			break;
+
         case "scenario3_reveil":
         	if(response.entities[0] !== undefined) {
         		text = ADE.premierCoursDeLaJournee(response.entities[0].value);
@@ -125,25 +127,36 @@ function callADE(response) {
                 text = ADE.dernierCoursDeLaJournee(response.entities[0].value);
 			}
 			break;
+
 		case "scenario5_prochainCours":
 			text = ADE.afficherProchainCours();
 			break;
+
 		case "scenario6_quelCoursDate":
 			if((response.context.date_4 !== undefined) && (response.context.time_1 !== undefined)) {
 				precedentContext[response.output.code] = context;
 				text = ADE.afficherCoursHeure(response.context.date_4, response.context.time_1);
 			}
 			break;
+
 		case  "scenario7_quelleDuree":
-			if(precedentContext["scenario6_quelCoursDate"] !== undefined) {
-                text = ADE.afficherDureeCoursHeure(precedentContext["scenario6_quelCoursDate"].date_4, precedentContext["scenario6_quelCoursDate"].time_1);
+			var prece = precedentContext["scenario6_quelCoursDate"];
+			if((prece !== undefined) && (prece.date_4 !== undefined) && (prece.time_1 !== undefined)) {
+                text = ADE.afficherDureeCoursHeure(prece.date_4, prece.time_1);
+			} else {
+				text = "Il n'y a pas de contexte à cette question";
 			}
 			break;
+
 		case "scenario8_quelProf":
-            if(precedentContext["scenario6_quelCoursDate"] !== undefined) {
-                text = ADE.afficherEnseignant(precedentContext["scenario6_quelCoursDate"].date_4, precedentContext["scenario6_quelCoursDate"].time_1);
-            }
+			var prece = precedentContext["scenario6_quelCoursDate"];
+            if(prece !== undefined) {
+                text = ADE.afficherEnseignant(prece.date_4, prece.time_1);
+            } else {
+            	text = "Il n'y a pas de contexte à cette question";
+			}
 			break;
+
         case "scenario9_coursSuivant":
             if(precedentContext["scenario6_quelCoursDate"] !== undefined) {
                 var object = ADE.afficherProchainCours(false,precedentContext["scenario6_quelCoursDate"].date_4, null, precedentContext["scenario6_quelCoursDate"].time_1);
@@ -154,6 +167,7 @@ function callADE(response) {
                 console.log(precedentContext);
             }
             break;
+
         case "scenario10_examen":
             if((response.entities[1] !== undefined) && (response.entities[2] !== undefined)) {
                 text = ADE.afficherProchainCours(true, response.entities[1].value, response.entities[2].value);
@@ -161,12 +175,14 @@ function callADE(response) {
                 text = ADE.afficherProchainCours(true);
 			}
             break;
+
 		case "scenario_changer_groupe":
 			if((response.context.ecole !== undefined) && (response.context.number !== undefined) && (response.context.classe !== undefined)) {
 				text = ADE.setGroupe(response.context.ecole, response.context.number, response.context.classe);
                 precedentContext["scenario6_quelCoursDate"] = {};
 			}
 			break;
+
 		default:
 			text = "Je ne sais pas quoi vous répondre";
 			break;
