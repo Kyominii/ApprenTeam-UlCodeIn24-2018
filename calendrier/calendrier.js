@@ -207,7 +207,12 @@ Calendrier.prototype = {
                 }
             }
         }
-        return "Vous êtes en "+annee.replaceAll('_',' ')+", groupe "+groupe+" à "+ecole.replaceAll('_',' ')+".";
+        if(id != -1) {
+            ressources = id;
+            return "Vous êtes en " + annee.replaceAll('_', ' ') + ", groupe " + groupe + " à " + ecole.replaceAll('_', ' ') + ".";
+        }else{
+            return "Votre groupe n'est pas connu";
+        }
     },
     getCoursPeriode : function (dateDebut,dateFin) {
         var timestamp = createDate(getDateParam(dateFin),true).getTime()/1000;
