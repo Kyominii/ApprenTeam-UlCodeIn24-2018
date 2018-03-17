@@ -192,7 +192,7 @@ Calendrier.prototype = {
         }
         groupe = groupe.formatter();
         var groupeDatas = groupe.split('_');
-        if(groupeDatas.indexOf('groupe') == 0){
+        if(groupeDatas.indexOf('classe') == 0){
             groupe = groupeDatas[1];
         }
 
