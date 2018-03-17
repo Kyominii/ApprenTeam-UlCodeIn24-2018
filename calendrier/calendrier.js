@@ -217,7 +217,12 @@ Calendrier.prototype = {
         if(groupeDatas.indexOf('classe') == 0){
             groupe = groupeDatas[1];
             if(groupe == 'de'){
-                groupe = '2';
+                groupeDatas[1] = '2';
+            }
+            groupe = '';
+            for(var i = 1; i < groupeDatas.length; i++){
+                if(groupe != ''){groupe += '_';}
+                groupe += groupeDatas[i];
             }
         }
 
@@ -592,7 +597,7 @@ function parseCalendrier(output,endLine){
 
 module.exports = Calendrier.prototype;
 
-console.log(Calendrier.prototype.getLogin("ophélien","AMSLER"));
+console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 2"));
 
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
