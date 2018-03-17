@@ -191,6 +191,8 @@ function callADE(response) {
 						text = t;
 					});
             }
+            break;
+
 		default:
 			text = "Je ne sais pas quoi vous répondre";
 			break;
