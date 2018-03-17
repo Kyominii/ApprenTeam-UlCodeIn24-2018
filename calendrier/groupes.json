@@ -28,17 +28,17 @@
   "iut nancy charlemagne" : {
     "Département informatique" : {
       "première année" : {
-        "Groupe A" : "147722",
-        "Groupe B" : "147723",
-        "Groupe C" : "147724",
-        "Groupe D" : "147725",
-        "Groupe E" : "147726"
+        "groupe_a" : "147722",
+        "groupe_b" : "147723",
+        "groupe_c" : "147724",
+        "groupe_d" : "147725",
+        "groupe_e" : "147726"
       },
       "deuxième année" : {
-        "Groupe A" : "4152",
-        "Groupe B" : "4153",
-        "Groupe SI-1" : "10465",
-        "Groupe SI-2" : "28107"
+        "groupe_a" : "4152",
+        "groupe_b" : "4153",
+        "groupe_si_1" : "10465",
+        "groupe_si_2" : "28107"
       }
     }
   }

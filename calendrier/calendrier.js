@@ -334,7 +334,7 @@ Calendrier.prototype = {
         if(cours.length == 0){
             retour += "vous n'avez pas de cours.";
         }else {
-            retour += "vous assisterez "+cours[0].nom;
+            retour += "à "+cours[0].getHeureLongue(cours[0].dateDebut)+"vous assisterez "+cours[0].nom;
             if(cours[0].salle != ''){
                 retour += ' en salle '+cours[0].salle.replaceAll('_',' ');
             }
@@ -385,6 +385,6 @@ module.exports = Calendrier.prototype;
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 Calendrier.prototype.setGroupe("FST Info","deuxième année","Groupe 2");
 
-console.log(Calendrier.prototype.nbHeuresCoursDansLaPeriode('2018-04-04','2018-04-05'));
+console.log(Calendrier.prototype.nbHeuresCoursDansLaPeriode('2018-03-04','2018-04-05'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
