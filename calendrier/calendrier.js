@@ -387,6 +387,7 @@ Calendrier.prototype = {
             dateFin = date.getFullYear() + "-" + moisFin + "-" + jour;
         }
         var cours = this.getCoursPeriode(dateDebut,dateFin);
+        var dernierCourTrouve;
         var retour = '';
         if(cours.length == 0){
             if(exam){retour = "Vous n'avez pas d'examen à venir";}
@@ -397,8 +398,7 @@ Calendrier.prototype = {
                 if((!trouve || periode)&& cour.dateDebut >= date){
                     if((exam && (cour.nom.toLowerCase().indexOf('exam') != -1 || cour.nom.toLowerCase().indexOf('ds') != -1)) || !exam){
                         trouve = true;
-                        console.log(date);
-                        console.log(cour.dateDebut);
+                        dernierCourTrouve = cour;
                         retour += getPhraseDebut(cour.dateDebut)+"à "+cour.getHeureLongue(cour.dateDebut)+" vous assisterez à "+cour.nom;
                         if(cour.salle != ''){
                             retour += ' en salle '+cour.salle.replaceAll('_',' ');
@@ -418,6 +418,17 @@ Calendrier.prototype = {
                     retour = "Entre le "+cours[0].getDateLongue(cours[0].dateDebut)+" et le "+cours[cours.length-1].getDateLongue(cours[cours.length-1].dateFin)+" vous aurez les examens suivants : "+retour;
                 }
             }
+        }
+        if(heureDebut){
+            var heure = (dernierCourTrouve.dateDebut.getHours().toString().length == 2 ? dernierCourTrouve.dateDebut.getHours() : "0" + dernierCourTrouve.dateDebut.getHours());
+            var minutes = (dernierCourTrouve.dateDebut.getMinutes().toString().length == 2 ? dernierCourTrouve.dateDebut.getMinutes() : "0" + dernierCourTrouve.dateDebut.getMinutes());
+            var jour = (dernierCourTrouve.dateDebut.getDate().toString().length == 2 ? dernierCourTrouve.dateDebut.getDate() : "0" + dernierCourTrouve.dateDebut.getDate());
+            var mois = (dernierCourTrouve.dateDebut.getMonth().toString().length == 2 ? dernierCourTrouve.dateDebut.getMonth() : "0" + dernierCourTrouve.dateDebut.getMonth());
+            retour = {
+                text: retour,
+                date: dernierCourTrouve.dateDebut.getFullYear() + '-' + mois + '-' + jour,
+                heure: heure + ':' + minutes + ':00'
+            };
         }
         return retour;
     },
@@ -488,6 +499,6 @@ module.exports = Calendrier.prototype;
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 //console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
 
-console.log(Calendrier.prototype.afficherProchainCours(false,'2018-03-20',null,'08:00:00'));
+console.log(Calendrier.prototype.afficherProchainCours(false,'2018-04-10',null,'08:00:00'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
