@@ -203,14 +203,6 @@ function callADE(response) {
 			}
 			break;
 
-		case "scenario_cinema":
-            if(response.entities[0].value !== undefined) {
-            	console.log(cinemas[response.entities[0].value]);
-            	text = getFilmCinema(cinemas[response.entities[0].value]);
-            	console.log('text 2 = ' + text);
-            }
-            break;
-
 		case "login":
 			if(response.context.login !== undefined) {
 				text = ADE.getLogin(response.context.login);
