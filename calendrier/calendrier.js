@@ -207,8 +207,7 @@ Calendrier.prototype = {
                 }
             }
         }
-        ressources = id;
-        console.log(ressources);
+        return "Vous êtes en "+annee.replaceAll('_',' ')+", groupe "+groupe+" à "+ecole.replaceAll('_',' ')+".";
     },
     getCoursPeriode : function (dateDebut,dateFin) {
         var timestamp = createDate(getDateParam(dateFin),true).getTime()/1000;
