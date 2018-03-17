@@ -426,6 +426,15 @@ Calendrier.prototype = {
         }
         return retour;
     },
+    afficherProchainCoursAvecGroupe : function(ecole,annee,groupe){
+        var id = ressources;
+        var res = this.setGroupe(ecole,annee,groupe).indexOf("Vous êtes");
+        if(res == 0){
+            res = this.afficherProchainCours();
+        }
+        ressources = id;
+        return res;
+    },
     afficherProchainCours : function(exam,dateDebut,dateFin,heureDebut){
         var date = new Date();
         var periode = false;
@@ -555,8 +564,9 @@ module.exports = Calendrier.prototype;
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
-//console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
+//console.log(Calendrier.prototype.afficherProchainCoursAvecGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
 
-console.log(Calendrier.prototype.afficherProchainCours());
+
+//console.log(Calendrier.prototype.afficherProchainCours());
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
