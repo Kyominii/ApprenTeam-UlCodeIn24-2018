@@ -385,7 +385,8 @@ Calendrier.prototype = {
         var cours = this.getCoursPeriode(dateDebut,dateFin);
         var retour = '';
         if(cours.length == 0){
-            retour = "Vous n'avez pas de cours à venir";
+            if(exam){retour = "Vous n'avez pas d'examen à venir";}
+            else{retour = "Vous n'avez pas de cours à venir";}
         }else {
             var trouve = false;
             cours.forEach(function (cour) {
