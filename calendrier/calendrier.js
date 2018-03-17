@@ -523,8 +523,8 @@ Calendrier.prototype = {
         }
         return retour;
     },
-    getLogin : function (login) {
-        login = login.formatter();
+    getLogin : function (prenom,nom) {
+        var login = prenom.formatter()+'_'+nom.formatter();
         var fs = require('fs');
         var contents = fs.readFileSync('calendrier/login.json', 'utf8');
         var json = JSON.parse(contents);
@@ -537,8 +537,8 @@ Calendrier.prototype = {
             return "Login inconnu.";
         }
     },
-    saveLogin : function (login) {
-        login = login.formatter();
+    saveLogin : function (prenom,nom) {
+        var login = prenom.formatter()+'_'+nom.formatter();
         var fs = require('fs');
         var contents = fs.readFileSync('calendrier/login.json', 'utf8');
         var json = JSON.parse(contents);
@@ -587,7 +587,7 @@ function parseCalendrier(output,endLine){
 
 module.exports = Calendrier.prototype;
 
-console.log(Calendrier.prototype.getLogin("ophélien AMSLER"));
+console.log(Calendrier.prototype.getLogin("ophélien","AMSLER"));
 
 //var calendar = getCalendrier(ressources,nbWeeks,timestamp);
 
