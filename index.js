@@ -10,6 +10,7 @@ var port = process.env.PORT || 8080;
 var bodyParser = require('body-parser');
 
 var memory = {};
+var precedentContext = [];
 
 require('dotenv').config();
 
@@ -123,8 +124,21 @@ function callADE(response) {
                 text = ADE.dernierCoursDeLaJournee(response.entities[0].value);
 			}
 			break;
+		case "scenario6_quelCoursDate":
+			if((response.context.date_4 !== undefined) && (response.context.time_1 !== undefined)) {
+				precedentContext[response.output.code] = context;
+				text = ADE.afficherCoursHeure(response.context.date_4, response.context.time_1);
+			}
+			break;
+		case  "scenario7_quelleDuree":
+			console.log(precedentContext["scenario6_quelCoursDate"]);
+			if(precedentContext["scenario6_quelCoursDate"] !== undefined) {
+                text = ADE.afficherDureeCoursHeure(precedentContext["scenario6_quelCoursDate"].date_4, precedentContext["scenario6_quelCoursDate"].time_1);
+                precedentContext["scenario6_quelCoursDate"] = {};
+			}
+			break;
 		default:
-			text = "Je ne sais pas pas quoi vous répondre";
+			text = "Je ne sais pas quoi vous répondre";
 			break;
 	}
 
