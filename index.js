@@ -3,6 +3,7 @@
 const ConversationV1 = require('watson-developer-cloud/conversation/v1');
 const ADE = require('./calendrier/calendrier');
 const redis = require('redis');
+const allocine = require('allocine-api');
 
 var express = require('express');
 var app = express();
@@ -183,6 +184,13 @@ function callADE(response) {
 			}
 			break;
 
+		case "scenario_cinema":
+            if(response.context.cinema !== undefined) {
+            	getFilmCinema(cinemas[response.context.cinema])
+					.then((t) => {
+						text = t;
+					});
+            }
 		default:
 			text = "Je ne sais pas quoi vous répondre";
 			break;
@@ -193,6 +201,32 @@ function callADE(response) {
 	}
 	return text;
 
+}
+
+let cinemas = {
+	"Cameo Commanderie": "P0073",
+	"UGC Ludres": "P0090",
+	"Cameo Saint Sebastien": "P0108",
+	"Kinepolis": "P1665"
+}
+
+function getFilmCinema(idCinema) {
+    return new Promise(function(resolve, reject) {
+        allocine.api('movielist', {
+            code: idCinema,
+            count: 1,
+            filter: "nowshowing",
+            format: "json"
+        }, (error, results) => {
+            if (error) {
+                console.log('Error : ' + error);
+                reject();
+            }
+
+            console.log('Voici les données retournées par l\'API Allociné:');
+            resolve("Je vous conseille d'aller voir " + results.feed.movie.title);
+        });
+    });
 }
 
 function sendResponse(response, resolve) {
@@ -264,7 +298,6 @@ app.post('/api/google4IBM', function(args, res) {
 	res.setHeader('Content-Type', 'application/json')
 	res.append("Google-Assistant-API-Version", "v2")
 */
-
 
 // start the server
 app.listen(port);
