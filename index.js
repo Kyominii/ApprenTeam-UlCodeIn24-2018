@@ -98,20 +98,30 @@ function callADE(response) {
 	
 	switch(response.output.code) {
 		case "scenario1_journee":
-			console.log('ok');
-			return ADE.afficherCoursJour(response.entities[0].value);
-        case "scenario_heuresSemaine":
-            return ADE.nbHeuresCoursDansLaPeriode(response.entities[0].value, response.entities[1].value);
+			if(response.entities[0] !== undefined) {
+                return ADE.afficherCoursJour(response.entities[0].value);
+			}
+        case "scenario2_heuresPeriode":
+        	if((response.context.date !== undefined) && (response.context.date_2 !== undefined)) {
+                return ADE.nbHeuresCoursDansLaPeriode(response.context.date, response.context.date_2);
+			}
         case "scenario3_reveil":
-            return ADE.premierCoursDeLaJournee(response.entities[0].value);
+        	if(response.entities[0] !== undefined) {
+                return ADE.premierCoursDeLaJournee(response.entities[0].value);
+			}
         case "scenario4_finDeJournee":
-            return ADE.dernierCoursDeLaJournee(response.entities[0].value);
+        	if(response.entities[0] !== undefined) {
+                return ADE.dernierCoursDeLaJournee(response.entities[0].value);
+			}
 	}
+
+	return "Je ne sais pas pas quoi vous répondre";
 
 }
 
 function sendResponse(response, resolve) {
-	
+
+    console.log(response.output.code);
 	  // Combine the output messages into one message.
 	  var output;
 	  if(response.output.code) {
@@ -119,7 +129,6 @@ function sendResponse(response, resolve) {
 	  } else {
 	  	output = response.output.text.join(' ');
 	  }
-	  console.log(response.output.code);
 	  var resp = {
 		conversationToken: null,
 		expectUserResponse: true,
