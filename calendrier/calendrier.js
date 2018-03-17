@@ -120,6 +120,21 @@ function Cours(nom,salle,dateFin,dateDebut,description){
     this.dateFin = createDate(dateFin);
     this.description = description;
     this.enseignant = description.split("\\n")[3];
+    if(this.enseignant == ''){
+        this.enseignant = 'un prof qui voulait garder son anonymat';
+    }else{
+        var enseignantDatas = this.enseignant.split(' ');
+        var nom = '';
+        var prenom = '';
+        enseignantDatas.forEach(function (value) {
+            if(value.toUpperCase() == value){ // nom
+                nom += value+" ";
+            }else{ // prénom
+                prenom += value+" ";
+            }
+        });
+        this.enseignant = prenom+nom;
+    }
 }
 
 Cours.prototype.getJourLong = function(date) {
@@ -499,6 +514,6 @@ module.exports = Calendrier.prototype;
 //var cours = calendar.getCoursHeure('2018-03-22','14:00:00');
 //console.log(Calendrier.prototype.setGroupe("IUT Nancy Charlemagne","deuxieme année","SI 1"));
 
-console.log(Calendrier.prototype.afficherProchainCours(false,'2018-04-10',null,'08:00:00'));
+console.log(Calendrier.prototype.afficherEnseignant('2018-03-20','10:00:00'));
 //console.log(calendar.cours[2].getDateLongue(calendar.cours[2].dateFin));
 //console.log(calendar.getCoursHeure(23,3,2018,16,0));*/
